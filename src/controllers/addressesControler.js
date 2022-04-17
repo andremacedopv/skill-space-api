@@ -58,3 +58,17 @@ exports.update = (req, res, next) => {
     res.status(422).json({error: err})
   })
 }
+
+exports.delete = (req, res, next) => {
+  Address.findByPk(req.params.id)
+  .then(address => {
+    return address.destroy()
+  })
+  .then(response => {
+    res.json({response: "Endereço Excluído"})
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(422).json({error: err})
+  })
+}
