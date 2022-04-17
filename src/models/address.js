@@ -33,3 +33,5 @@ const Address = db.define('address', {
     allowNull: false,
   }
 })
+
+module.exports = Address
