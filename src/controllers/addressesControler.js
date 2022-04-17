@@ -18,14 +18,43 @@ exports.create = (req, res, next) => {
     neighborhood: address.neighborhood,
     number: address.number
   })
-  .then(result => {
-    console.log("Created Address")
-    res.json({deu: "bom"})
+  .then(address => {
+    res.json({address: address.dataValues})
   })
   .catch(err => {
     console.log(err)
     res.status(422).json({error: err})
   })
-  
-  console.log(req.body)
+}
+
+exports.show = (req, res, next) => {
+  Address.findByPk(req.params.id)
+  .then(address => {
+    res.json({address: address})
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(422).json({error: err})
+  })
+}
+
+exports.update = (req, res, next) => {
+  const newAddress = req.body
+  Address.findByPk(req.params.id)
+  .then(address => {
+    address.country = newAddress.country
+    address.state = newAddress.state
+    address.city = newAddress.city
+    address.street = newAddress.street
+    address.neighborhood = newAddress.neighborhood
+    address.number = newAddress.number
+    return address.save()
+  })
+  .then(response => {
+    res.json({address: response.dataValues})
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(422).json({error: err})
+  })
 }

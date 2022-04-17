@@ -9,6 +9,8 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/addresses', addressesController.index);
+router.get('/addresses/:id', addressesController.show);
 router.post('/addresses/create', addressesController.create);
+router.patch('/addresses/update/:id', addressesController.update);
 
 module.exports = router;
