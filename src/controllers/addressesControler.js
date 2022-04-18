@@ -42,12 +42,12 @@ exports.update = (req, res, next) => {
   const newAddress = req.body
   Address.findByPk(req.params.id)
   .then(address => {
-    address.country = newAddress.country
-    address.state = newAddress.state
-    address.city = newAddress.city
-    address.street = newAddress.street
-    address.neighborhood = newAddress.neighborhood
-    address.number = newAddress.number
+    address.country = newAddress.country ? newAddress.country : address.country
+    address.state = newAddress.state ? newAddress.state : address.state
+    address.city = newAddress.city ? newAddress.city : address.city
+    address.street = newAddress.street ? newAddress.street : address.street
+    address.neighborhood = newAddress.neighborhood ? newAddress.neighborhood : address.neighborhood
+    address.number = newAddress.number ? newAddress.number : address.number
     return address.save()
   })
   .then(response => {
