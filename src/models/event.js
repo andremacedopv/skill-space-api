@@ -3,7 +3,7 @@ const db = require('../services/database')
 const sequelize = require('sequelize')
 
 // Model definition
-const Event = db.define('Event', {
+const Event = db.define('event', {
     id: {
         type: sequelize.INTEGER,
         autoIncrement: true,

@@ -2,7 +2,7 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('event', {
+    await queryInterface.createTable('events', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -28,7 +28,9 @@ module.exports = {
       link: {
           type: Sequelize.STRING,
           allowNull: false
-      }
+      },
+      updatedAt: Sequelize.DATE,
+      createdAt: Sequelize.DATE
     })
   },
 

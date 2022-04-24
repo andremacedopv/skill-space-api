@@ -2,7 +2,7 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('address', {
+    await queryInterface.createTable('addresses', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -32,7 +32,9 @@ module.exports = {
       number: {
         type: Sequelize.STRING,
         allowNull: false,
-      }
+      },
+      updatedAt: Sequelize.DATE,
+      createdAt: Sequelize.DATE
     })
   },
 
