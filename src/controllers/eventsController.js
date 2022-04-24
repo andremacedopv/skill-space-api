@@ -1,5 +1,5 @@
 // Imports
-const Event = require('../models/events');
+const Event = require('../models/event');
 
 // Methods
 exports.index = (req, res, next) => {
