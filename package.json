@@ -5,7 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "db:drop": "npx sequelize-cli db:drop",
+    "db:create": "npx sequelize-cli db:create",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate && npm run db:seed"
   },
   "repository": {
     "type": "git",
