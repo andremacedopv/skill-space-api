@@ -1,6 +1,8 @@
 // Imports
 const db = require('../services/database')
-const sequelize = require('sequelize')
+const sequelize = require('sequelize');
+const InvitedSpeaker = require('./invitedSpeaker');
+const InvitedSpeakerEvent = require('./invitedSpeakerEvent');
 
 // Model definition
 const Event = db.define('event', {
@@ -31,5 +33,7 @@ const Event = db.define('event', {
         allowNull: false
     }
 });
+
+Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent })
 
 module.exports = Event;

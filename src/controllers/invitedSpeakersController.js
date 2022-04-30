@@ -1,3 +1,4 @@
+const Event = require('../models/event');
 const InvitedSpeaker = require('../models/invitedSpeaker')
 
 exports.index = (req, res, next) => {
@@ -20,6 +21,7 @@ exports.create = (req, res, next) => {
       job: invitedSpeaker.job,
   })
   .then(invitedSpeaker => {
+      invitedSpeaker.addEvent(Event.findByPk(1))
       res.json({ invitedSpeaker: invitedSpeaker.dataValues });
   })
   .catch(e => {

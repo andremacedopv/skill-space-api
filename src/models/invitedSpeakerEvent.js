@@ -1,7 +1,9 @@
 const sequelize = require('sequelize')
-const db = require('../services/database')
+const db = require('../services/database');
+const Event = require('./event');
+const InvitedSpeaker = require('./invitedSpeaker');
 
-const invitedSpeakerEvent = db.define('invitedSpeakerEvent', {
+const InvitedSpeakerEvent = db.define('invitedSpeakerEvent', {
   id: {
     type: sequelize.INTEGER,
     autoIncrement: true,
@@ -20,7 +22,4 @@ const invitedSpeakerEvent = db.define('invitedSpeakerEvent', {
   }
 })
 
-// Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent });
-// InvitedSpeaker.belongsToMany(Event, { through: InvitedSpeakerEvent });
-
-module.exports = invitedSpeakerEvent
+module.exports = InvitedSpeakerEvent
