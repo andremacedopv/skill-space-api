@@ -1,9 +1,10 @@
 // Imports
 const Event = require('../models/event');
+const InvitedSpeaker = require('../models/invitedSpeaker');
 
 // Methods
 exports.index = (req, res, next) => {
-    Event.findAll()
+    Event.findAll({ include: InvitedSpeaker })
     .then(events => {
         res.json({ events: events });
     })
