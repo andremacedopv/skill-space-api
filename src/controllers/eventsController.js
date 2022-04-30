@@ -22,8 +22,12 @@ exports.create = (req, res, next) => {
         remote: event.remote,
         link: event.link
     })
-    .then(event => {
-        res.json({ event: event.dataValues });
+    .then((newEvent) => {
+        newEvent.setInvitedSpeakers(event.invitedSpeakers)
+        return newEvent
+    })
+    .then(newEvent => {
+        res.json({ event: newEvent.dataValues });
     })
     .catch(e => {
         console.log(e)
