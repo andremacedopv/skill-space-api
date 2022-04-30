@@ -2,7 +2,7 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('invitedSpeakers', { 
+    await queryInterface.createTable('invitedSpeaker', { 
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

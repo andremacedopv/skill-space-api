@@ -1,7 +1,7 @@
 const sequelize = require('sequelize')
 const db = require('../services/database')
 
-const invitedSpeaker = db.define('address', {
+const invitedSpeaker = db.define('invitedSpeaker', {
   id: {
     type: sequelize.INTEGER,
     autoIncrement: true,

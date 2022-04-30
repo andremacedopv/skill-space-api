@@ -13,12 +13,11 @@ exports.index = (req, res, next) => {
 
 exports.create = (req, res, next) => {
   const invitedSpeaker = req.body;
+  console.log(invitedSpeaker)
   InvitedSpeaker.create({
       name: invitedSpeaker.name,
       description: invitedSpeaker.description,
-      date: invitedSpeaker.date,
-      remote: invitedSpeaker.remote,
-      link: invitedSpeaker.link
+      job: invitedSpeaker.job,
   })
   .then(invitedSpeaker => {
       res.json({ invitedSpeaker: invitedSpeaker.dataValues });
@@ -35,9 +34,7 @@ exports.update = (req, res, next) => {
   .then(invitedSpeaker => {
       invitedSpeaker.name = newinvitedSpeaker.name? newinvitedSpeaker.name : invitedSpeaker.name;
       invitedSpeaker.description = newinvitedSpeaker.description? newinvitedSpeaker.description : invitedSpeaker.description;
-      invitedSpeaker.date = newinvitedSpeaker.date? newinvitedSpeaker.date : invitedSpeaker.date;
-      invitedSpeaker.remote = newinvitedSpeaker.remote? newinvitedSpeaker.remote : invitedSpeaker.remote;
-      invitedSpeaker.link = newinvitedSpeaker.link? newinvitedSpeaker.link : invitedSpeaker.link;
+      invitedSpeaker.job = newinvitedSpeaker.job? newinvitedSpeaker.job : invitedSpeaker.job;
       return invitedSpeaker.save()
   })
   .then(response => {

@@ -25,7 +25,7 @@ router.get('/event', eventsController.index);
 router.post('/invited-speaker/create', invitedSpeakersController.create);
 router.put('/invited-speaker/update/:id', invitedSpeakersController.update);
 router.delete('/invited-speaker/delete/:id', invitedSpeakersController.delete);
-router.get('/invited-speakers/:id', invitedSpeakersController.show);
-router.get('/invited-speakers', invitedSpeakersController.index);
+router.get('/invited-speaker/:id', invitedSpeakersController.show);
+router.get('/invited-speaker', invitedSpeakersController.index);
 
 module.exports = router;
