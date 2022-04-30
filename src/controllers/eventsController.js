@@ -45,6 +45,7 @@ exports.update = (req, res, next) => {
         event.date = newEvent.date? newEvent.date : event.date;
         event.remote = newEvent.remote? newEvent.remote : event.remote;
         event.link = newEvent.link? newEvent.link : event.link;
+        newEvent.invitedSpeakers && event.setInvitedSpeakers(newEvent.invitedSpeakers)
         return event.save()
     })
     .then(response => {
@@ -52,6 +53,7 @@ exports.update = (req, res, next) => {
     })
     .catch(e => {
         console.log(e)
+        
         res.status(422).json({ error: e })
     }) 
 }
