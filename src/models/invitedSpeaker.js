@@ -24,6 +24,4 @@ const InvitedSpeaker = db.define('invitedSpeaker', {
   }
 })
 
-// InvitedSpeaker.belongsToMany(Event, { through: InvitedSpeakerEvent });
-
 module.exports = InvitedSpeaker

@@ -1,7 +1,5 @@
 const sequelize = require('sequelize')
 const db = require('../services/database');
-const Event = require('./event');
-const InvitedSpeaker = require('./invitedSpeaker');
 
 const InvitedSpeakerEvent = db.define('invitedSpeakerEvent', {
   id: {

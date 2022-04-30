@@ -21,8 +21,10 @@ exports.create = (req, res, next) => {
       job: invitedSpeaker.job,
   })
   .then(invitedSpeaker => {
-      invitedSpeaker.addEvent(Event.findByPk(1))
-      res.json({ invitedSpeaker: invitedSpeaker.dataValues });
+      Event.findByPk(1).then(e => {
+          invitedSpeaker.addEvent(e)
+          res.json({ invitedSpeaker: invitedSpeaker.dataValues });
+      })
   })
   .catch(e => {
       console.log(e)
