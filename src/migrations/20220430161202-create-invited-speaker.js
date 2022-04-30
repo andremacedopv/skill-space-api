@@ -20,7 +20,9 @@ module.exports = {
       job: {
         type: Sequelize.STRING,
         allowNull: false
-      }
+      },
+      updatedAt: Sequelize.DATE,
+      createdAt: Sequelize.DATE
     });
   },
 

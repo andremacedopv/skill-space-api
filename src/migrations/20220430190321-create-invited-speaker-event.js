@@ -18,7 +18,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 'invitedSpeakers', key: 'id' },
         onDelete: 'CASCADE',
-      }
+      },
+      updatedAt: Sequelize.DATE,
+      createdAt: Sequelize.DATE
     });
   },
 

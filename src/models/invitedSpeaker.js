@@ -1,7 +1,7 @@
 const sequelize = require('sequelize')
 const db = require('../services/database')
 
-const invitedSpeaker = db.define('invitedSpeaker', {
+const InvitedSpeaker = db.define('invitedSpeaker', {
   id: {
     type: sequelize.INTEGER,
     autoIncrement: true,
@@ -22,4 +22,4 @@ const invitedSpeaker = db.define('invitedSpeaker', {
   }
 })
 
-module.exports = invitedSpeaker
+module.exports = InvitedSpeaker
