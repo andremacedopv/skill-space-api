@@ -57,7 +57,7 @@ exports.update = (req, res, next) => {
 }
 
 exports.show = (req, res, next) => {
-    Event.findByPk(req.params.id)
+    Event.findByPk(req.params.id, { include: InvitedSpeaker })
     .then(event => {
         res.json({ event: event })
     })
