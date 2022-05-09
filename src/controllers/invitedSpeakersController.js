@@ -20,11 +20,12 @@ exports.create = (req, res, next) => {
       description: invitedSpeaker.description,
       job: invitedSpeaker.job,
   })
+  .then(newInvitedSpeaker => {
+    newInvitedSpeaker.setEvents(invitedSpeaker.events)
+    return newInvitedSpeaker
+  })
   .then(invitedSpeaker => {
-      Event.findByPk(1).then(e => {
-          invitedSpeaker.addEvent(e)
-          res.json({ invitedSpeaker: invitedSpeaker.dataValues });
-      })
+      res.json({ invitedSpeaker: invitedSpeaker.dataValues });
   })
   .catch(e => {
       console.log(e)
@@ -33,12 +34,13 @@ exports.create = (req, res, next) => {
 }
 
 exports.update = (req, res, next) => {
-  const newinvitedSpeaker = req.body;
+  const newInvitedSpeaker = req.body;
   InvitedSpeaker.findByPk(req.params.id)
   .then(invitedSpeaker => {
-      invitedSpeaker.name = newinvitedSpeaker.name? newinvitedSpeaker.name : invitedSpeaker.name;
-      invitedSpeaker.description = newinvitedSpeaker.description? newinvitedSpeaker.description : invitedSpeaker.description;
-      invitedSpeaker.job = newinvitedSpeaker.job? newinvitedSpeaker.job : invitedSpeaker.job;
+      invitedSpeaker.name = newInvitedSpeaker.name? newInvitedSpeaker.name : invitedSpeaker.name;
+      invitedSpeaker.description = newInvitedSpeaker.description? newInvitedSpeaker.description : invitedSpeaker.description;
+      invitedSpeaker.job = newInvitedSpeaker.job? newInvitedSpeaker.job : invitedSpeaker.job;
+      newInvitedSpeaker.events && invitedSpeaker.setEvents(newInvitedSpeaker.events)
       return invitedSpeaker.save()
   })
   .then(response => {
