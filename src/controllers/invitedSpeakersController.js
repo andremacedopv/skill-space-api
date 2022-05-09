@@ -2,7 +2,7 @@ const Event = require('../models/event');
 const InvitedSpeaker = require('../models/invitedSpeaker')
 
 exports.index = (req, res, next) => {
-  InvitedSpeaker.findAll()
+  InvitedSpeaker.findAll({include: Event})
   .then(invitedSpeakers => {
       res.json({ invitedSpeakers: invitedSpeakers });
   })
@@ -51,7 +51,7 @@ exports.update = (req, res, next) => {
 }
 
 exports.show = (req, res, next) => {
-  InvitedSpeaker.findByPk(req.params.id)
+  InvitedSpeaker.findByPk(req.params.id, {include: Event})
   .then(invitedSpeaker => {
       res.json({ invitedSpeaker: invitedSpeaker })
   })
