@@ -40,5 +40,6 @@ Address.hasOne(User, {
   onDelete: 'SET NULL',
   onUpdate: 'CASCADE'
 })
+User.belongsTo(Address);
 
 module.exports = Address

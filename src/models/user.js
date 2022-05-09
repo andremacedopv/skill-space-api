@@ -59,8 +59,12 @@ const User = db.define('user', {
         allowNull: false,
         defaultValue: false
     }
+}, {
+    scopes: {
+        withoutPassword: {
+          attributes: { exclude: ['password'] },
+        }
+    }  
 });
-
-User.belongsTo(Address);
 
 module.exports = User;
