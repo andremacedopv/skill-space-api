@@ -4,6 +4,7 @@ const router = express.Router();
 
 const addressesController = require('../controllers/addressesControler')
 const eventsController = require('../controllers/eventsController')
+const invitedSpeakersController = require('../controllers/invitedSpeakersController')
 
 router.get('/', (req, res, next) => {
     res.json({ message: 'Hello World' });
@@ -21,5 +22,10 @@ router.delete('/event/delete/:id', eventsController.delete);
 router.get('/event/:id', eventsController.show);
 router.get('/event', eventsController.index);
 
+router.post('/invited-speaker/create', invitedSpeakersController.create);
+router.put('/invited-speaker/update/:id', invitedSpeakersController.update);
+router.delete('/invited-speaker/delete/:id', invitedSpeakersController.delete);
+router.get('/invited-speaker/:id', invitedSpeakersController.show);
+router.get('/invited-speaker', invitedSpeakersController.index);
 
 module.exports = router;

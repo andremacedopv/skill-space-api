@@ -1,6 +1,8 @@
 // Imports
 const db = require('../services/database')
-const sequelize = require('sequelize')
+const sequelize = require('sequelize');
+const InvitedSpeaker = require('./invitedSpeaker');
+const InvitedSpeakerEvent = require('./invitedSpeakerEvent');
 
 // Model definition
 const Event = db.define('event', {
