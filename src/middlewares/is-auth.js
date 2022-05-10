@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     }
     let decodedTkn;
     try {
-        decodedTkn = jwt.verify(token, 'SecretToken')
+        decodedTkn = jwt.verify(token, process.env.TKN_SECRET)
     } catch (e) {
         e.statusCode = 500;
         throw e;
