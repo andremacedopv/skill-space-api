@@ -1,6 +1,5 @@
 const sequelize = require('sequelize')
 const db = require('../services/database')
-const User = require('./user');
 
 const Address = db.define('address', {
   id: {
@@ -34,12 +33,5 @@ const Address = db.define('address', {
     allowNull: false,
   }
 })
-
-Address.hasOne(User, {
-  foreignKey: 'addressId',
-  onDelete: 'SET NULL',
-  onUpdate: 'CASCADE'
-})
-User.belongsTo(Address);
 
 module.exports = Address

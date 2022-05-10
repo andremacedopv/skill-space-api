@@ -6,8 +6,8 @@ const router = express.Router();
 const User = require('../models/user');
 
 const usersController = require('../controllers/usersController')
-const isAuth = require('../middleware/is-auth')
-const isAdmin = require('../middleware/is-admin')
+const isAuth = require('../middlewares/is-auth')
+const isAdmin = require('../middlewares/is-admin')
 
 router.post('/signup', [
    body('email')

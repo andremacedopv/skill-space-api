@@ -1,5 +1,6 @@
 // Imports
 const User = require('../models/user');
+const Address = require('../models/address')
 const { validationResult } = require('express-validator/check')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -24,6 +25,27 @@ exports.signup = (req, res, next) => {
             ddd: user.ddd,
             phone: user.phone,
             birthdate: user.birthdate,
+        })
+        .then(newUser => {
+            if(user.address) {
+                Address.create({
+                    country: user.address.country,
+                    state: user.address.state,
+                    city: user.address.city,
+                    street: user.address.street,
+                    neighborhood: user.address.neighborhood,
+                    number: user.address.number
+                })
+                .then(address => {
+                    newUser.setAddress(address)
+                    return newUser
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.status(422).json({error: err})
+                })
+            }
+            return newUser
         })
         .then(newUser => {
             res.status(201).json({message: "User created", id: newUser.id})
