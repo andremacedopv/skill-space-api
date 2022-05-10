@@ -86,7 +86,7 @@ exports.login = (req, res, next) => {
 
         userObject = loadedUser.dataValues
         delete userObject.password
-        const token = jwt.sign({user: userObject}, 'SecretToken', {
+        const token = jwt.sign({user: userObject}, process.env.TKN_SECRET, {
             expiresIn: '3h'
         });
         res.status(200).json({token: token, user: userObject})
