@@ -1,7 +1,6 @@
 // Imports
 const db = require('../services/database')
 const sequelize = require('sequelize');
-const Address = require('./address');
 
 // Model definition
 const User = db.define('user', {
