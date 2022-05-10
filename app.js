@@ -8,8 +8,9 @@ const db = require('./src/services/database')
 const router = require('./src/routes/routes')
 const authRouter = require('./src/routes/auth')
 
-const app = express();
+const associateModels = require('./src/middlewares/associations');
 
+const app = express();
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(associateModels)
 app.use(router);
 app.use(authRouter);
 
