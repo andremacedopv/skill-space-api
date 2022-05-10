@@ -164,3 +164,65 @@ exports.index = (req, res, next) => {
     })
     .catch(err => console.log(err))
 }
+
+exports.promote = (req, res, next) => {
+    User.findByPk(req.params.id)
+    .then(user => {
+        user.admin = true
+        return user.save()
+    })
+    .then(response => {
+        res.json({message: `${response.name} promoted to admin`})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json({error: err})
+    })
+}
+
+exports.demote = (req, res, next) => {
+    User.findByPk(req.params.id)
+    .then(user => {
+        user.admin = false
+        return user.save()
+    })
+    .then(response => {
+        res.json({message: `${response.name} demoted to regular user`})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json({error: err})
+    })
+}
+
+// Nas duas funções a seguir, colocar regra para somente o owner poder desativar um admin
+
+exports.deactivate = (req, res, next) => {
+    User.findByPk(req.params.id)
+    .then(user => {
+        user.is_active = false
+        return user.save()
+    })
+    .then(response => {
+        res.json({message: `${response.name} deactivated`})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json({error: err})
+    })
+}
+
+exports.activate = (req, res, next) => {
+    User.findByPk(req.params.id)
+    .then(user => {
+        user.is_active = true
+        return user.save()
+    })
+    .then(response => {
+        res.json({message: `${response.name} activated`})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json({error: err})
+    })
+}
