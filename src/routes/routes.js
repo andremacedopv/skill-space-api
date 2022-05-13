@@ -2,7 +2,7 @@ const express = require('express')
 
 const router = express.Router();
 
-const addressesController = require('../controllers/addressesControler')
+const addressesController = require('../controllers/addressesController')
 const eventsController = require('../controllers/eventsController')
 const invitedSpeakersController = require('../controllers/invitedSpeakersController')
 
