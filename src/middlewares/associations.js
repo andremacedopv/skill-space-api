@@ -3,6 +3,7 @@ const InvitedSpeaker = require("../models/invitedSpeaker");
 const InvitedSpeakerEvent = require("../models/invitedSpeakerEvent");
 const User = require('../models/user');
 const Address = require('../models/address')
+const EventFeedback = require('../models/eventFeedback')
 
 const associateModels = (req, res, next) => {
   Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent })
@@ -14,6 +15,10 @@ const associateModels = (req, res, next) => {
     onUpdate: 'CASCADE'
   })
   User.belongsTo(Address);
+
+  EventFeedback.belongsTo(User)
+  EventFeedback.belongsTo(Event)
+
   next()
 }
 
