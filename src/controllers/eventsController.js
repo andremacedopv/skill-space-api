@@ -5,7 +5,7 @@ const InvitedSpeaker = require('../models/invitedSpeaker');
 
 // Methods
 exports.index = (req, res, next) => {
-    Event.findAll({ include: [EventFeedback, InvitedSpeaker] })
+    Event.findAll({ include: EventFeedback })
     .then(events => {
         res.json({ events: events });
     })
@@ -103,5 +103,16 @@ exports.createFeedback = async (req, res, next) => {
         console.log(e)
         res.status(422).json({ error: e })
     }
-    
+}
+
+exports.feedbacks = async (req, res, next) => {
+    try {
+        const event = await Event.findByPk(req.params.id, { include: EventFeedback })
+        res.status(200).json({feedbacks: event.eventFeedbacks})
+    }
+
+    catch (e) {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }
 }
