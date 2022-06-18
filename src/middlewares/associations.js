@@ -6,7 +6,7 @@ const Address = require('../models/address')
 const EventFeedback = require('../models/eventFeedback')
 
 const associateModels = (req, res, next) => {
-  Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent })
+  Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent });
   InvitedSpeaker.belongsToMany(Event, { through: InvitedSpeakerEvent });
 
   Address.hasOne(User, {
@@ -18,6 +18,7 @@ const associateModels = (req, res, next) => {
 
   EventFeedback.belongsTo(User)
   EventFeedback.belongsTo(Event)
+  Event.hasMany(EventFeedback)
 
   next()
 }

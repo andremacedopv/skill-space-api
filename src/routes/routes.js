@@ -6,6 +6,8 @@ const addressesController = require('../controllers/addressesController')
 const eventsController = require('../controllers/eventsController')
 const invitedSpeakersController = require('../controllers/invitedSpeakersController')
 
+const isAuth = require('../middlewares/is-auth')
+
 router.get('/', (req, res, next) => {
     res.json({ message: 'Hello World' });
 })
@@ -20,6 +22,7 @@ router.post('/event/create', eventsController.create);
 router.put('/event/update/:id', eventsController.update);
 router.delete('/event/delete/:id', eventsController.delete);
 router.get('/event/:id', eventsController.show);
+router.post('/event/:id/feedback/create', isAuth, eventsController.createFeedback);
 router.get('/event', eventsController.index);
 
 router.post('/invited-speaker/create', invitedSpeakersController.create);

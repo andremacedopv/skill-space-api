@@ -11,20 +11,20 @@ const EventFeedback = db.define('eventFeedback', {
     primaryKey: true
   },
   description: {
-    type: Sequelize.TEXT,
+    type: sequelize.TEXT,
     allowNull: false
   },
   score: {
-    type: Sequelize.INTEGER,
+    type: sequelize.INTEGER,
     allowNull: false
   },
   userId: {
-    type: Sequelize.INTEGER,
+    type: sequelize.INTEGER,
     references: { model: 'users', key: 'id' },
     onDelete: 'SET NULL',
   },
   eventId: {
-    type: Sequelize.INTEGER,
+    type: sequelize.INTEGER,
     references: { model: 'events', key: 'id' },
     onDelete: 'cascade',
   }

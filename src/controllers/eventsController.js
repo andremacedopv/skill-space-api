@@ -1,10 +1,11 @@
 // Imports
 const Event = require('../models/event');
+const EventFeedback = require('../models/eventFeedback');
 const InvitedSpeaker = require('../models/invitedSpeaker');
 
 // Methods
 exports.index = (req, res, next) => {
-    Event.findAll({ include: InvitedSpeaker })
+    Event.findAll({ include: [EventFeedback, InvitedSpeaker] })
     .then(events => {
         res.json({ events: events });
     })
@@ -81,4 +82,26 @@ exports.delete = (req, res, next) => {
         console.log(e)
         res.status(422).json({ error: e })
     }) 
+}
+
+exports.createFeedback = async (req, res, next) => {
+    
+    const feedbackParams = req.body;
+
+    try {
+        const event = await Event.findByPk(req.params.id)
+        const feedback = await EventFeedback.create({
+            description: feedbackParams.description,
+            score: feedbackParams.score,
+            userId: feedbackParams.userId ? feedbackParams.userId : null,
+            eventId: req.params.id
+        })
+        res.status(201).json({message: "Event Feedback created", feedback: feedback})
+    }
+
+    catch (e) {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }
+    
 }
