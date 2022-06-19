@@ -24,7 +24,7 @@ router.put('/event/update/:id', eventsController.update);
 router.delete('/event/delete/:id', eventsController.delete);
 router.get('/event/:id', eventsController.show);
 router.post('/event/:id/feedback/create', isAuth, eventsController.createFeedback);
-router.get('/event/:id/feedback', isAuth, eventsController.feedbacks);
+router.get('/event/:id/feedback', eventsController.feedbacks);
 
 router.post('/invited-speaker/create', invitedSpeakersController.create);
 router.put('/invited-speaker/update/:id', invitedSpeakersController.update);

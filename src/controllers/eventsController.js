@@ -93,7 +93,8 @@ exports.createFeedback = async (req, res, next) => {
         const feedback = await EventFeedback.create({
             description: feedbackParams.description,
             score: feedbackParams.score,
-            userId: feedbackParams.userId ? feedbackParams.userId : null,
+            anonymous: feedbackParams.anonymous,
+            userId: req.user ? req.user.id : null,
             eventId: req.params.id
         })
         res.status(201).json({message: "Event Feedback created", feedback: feedback})

@@ -16,7 +16,8 @@ const EventFeedback = db.define('eventFeedback', {
   },
   score: {
     type: sequelize.INTEGER,
-    allowNull: false
+    allowNull: false,
+    validate: { isInt: true }
   },
   userId: {
     type: sequelize.INTEGER,
@@ -30,7 +31,8 @@ const EventFeedback = db.define('eventFeedback', {
   },
   anonymous: {
     type: sequelize.BOOLEAN,
-    allowNull: false
+    allowNull: false,
+    validate: { isBoolean: true }
   }
 });
 
