@@ -62,6 +62,9 @@ const User = db.define('user', {
     scopes: {
         withoutPassword: {
           attributes: { exclude: ['password'] },
+        },
+        minimal: {
+            attributes: { exclude: ['password', 'admin', 'owner', 'addressId', 'cpf', 'createdAt', 'updatedAt'] }
         }
     }  
 });

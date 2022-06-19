@@ -30,6 +30,7 @@ router.post('/signup', [
 router.post('/login', usersController.login);
 
 router.get('/profile', isAuth, usersController.profile)
+router.get('/invitations', isAuth, usersController.invitations)
 router.put('/profile/update', isAuth, usersController.update)
 router.get('/user', isAuth, isAdmin, usersController.index)
 router.get('/user/:id', isAuth, usersController.show)

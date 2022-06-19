@@ -1,5 +1,6 @@
 // Imports
 const Event = require('../models/event');
+const Guest = require('../models/guest')
 const InvitedSpeaker = require('../models/invitedSpeaker');
 
 // Methods
@@ -25,6 +26,28 @@ exports.create = (req, res, next) => {
     })
     .then((newEvent) => {
         newEvent.setInvitedSpeakers(event.invitedSpeakers)
+        return newEvent
+    })
+    .then(newEvent => {
+        const invites = event.guests
+        if(invites != null) {
+            let guests = []
+            invites.forEach((user, i) => {
+                Guest.create({
+                    organizer: false,
+                    present: null,
+                    status: 'Invitation Pending',
+                    eventId: newEvent.id,
+                    userId: user
+                }).then(guest => {
+                    guests.push(guest)
+                })
+                .catch(e => {
+                    console.log(e)
+                    res.status(422).json({ error: e })
+                }) 
+            }) 
+        }
         return newEvent
     })
     .then(newEvent => {
@@ -81,4 +104,46 @@ exports.delete = (req, res, next) => {
         console.log(e)
         res.status(422).json({ error: e })
     }) 
+}
+
+exports.setInvites = (req, res, next) => {
+    const invites = req.body
+    Event.findByPk(req.params.id)
+    .then(event => {
+        let guests = []
+        invites.users.forEach((user, i) => {
+            Guest.create({
+                organizer: false,
+                present: false,
+                status: 'Invitation Pending',
+                eventId: event.id,
+                userId: user
+            }).then(guest => {
+                guests.push(guest)
+            })
+            .catch(e => {
+                console.log(e)
+                res.status(422).json({ error: e })
+            }) 
+        }) 
+        return guests
+    })
+    .then(event => {
+        res.json({ message: 'Convites registrados com sucesso' })
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }) 
+}
+
+exports.invites = (req, res, next) => {
+    Event.findByPk(req.params.id, { include: Guest })
+    .then(event => {
+      res.json({invitations: event.guests})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json({error: err})
+    })
 }
