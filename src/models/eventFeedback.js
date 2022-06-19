@@ -27,6 +27,10 @@ const EventFeedback = db.define('eventFeedback', {
     type: sequelize.INTEGER,
     references: { model: 'events', key: 'id' },
     onDelete: 'cascade',
+  },
+  anonymous: {
+    type: sequelize.BOOLEAN,
+    allowNull: false
   }
 });
 
