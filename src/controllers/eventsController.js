@@ -89,12 +89,19 @@ exports.createFeedback = async (req, res, next) => {
     const feedbackParams = req.body;
 
     try {
-        const event = await Event.findByPk(req.params.id)
+        await Event.findByPk(req.params.id)
+        const existingFeedback = await EventFeedback.findOne({ where: { userId: req.user.id, eventId: req.params.id } })
+
+        if(existingFeedback) {
+            const error = new Error("Can't create more than one feedback per user")
+            throw error
+        }
+
         const feedback = await EventFeedback.create({
             description: feedbackParams.description,
             score: feedbackParams.score,
             anonymous: feedbackParams.anonymous,
-            userId: req.user ? req.user.id : null,
+            userId: req.user.id,
             eventId: req.params.id
         })
         res.status(201).json({message: "Event Feedback created", feedback: feedback})
@@ -102,7 +109,7 @@ exports.createFeedback = async (req, res, next) => {
 
     catch (e) {
         console.log(e)
-        res.status(422).json({ error: e })
+        res.status(422).json({ error: e.toString() })
     }
 }
 
@@ -114,6 +121,6 @@ exports.feedbacks = async (req, res, next) => {
 
     catch (e) {
         console.log(e)
-        res.status(422).json({ error: e })
+        res.status(422).json({ error: e.toString() })
     }
 }
