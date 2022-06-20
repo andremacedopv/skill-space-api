@@ -30,16 +30,12 @@ exports.create = (req, res, next) => {
         return newEvent
     })
     .then(newEvent => {
-        const invites = event.guests
-        if(invites != null) {
+        if(event.guests != null) {
+            const invites = [...new Set(event.guests)]
             var guests = invites.map(u => ({
                 userId: u, eventId: newEvent.id
             }))
             Guest.bulkCreate(guests)
-            .catch(e => {
-                console.log(e)
-                res.status(422).json({ error: e })
-            }) 
         }
         return newEvent
     })
@@ -106,12 +102,7 @@ exports.setInvites = (req, res, next) => {
         var guests = invites.users.map(u => ({
             userId: u, eventId: event.id
         }))
-        Guest.bulkCreate(guests)
-        .catch(e => {
-            console.log(e)
-            res.status(422).json({ error: e })
-        })
-        return guests
+        return Guest.bulkCreate(guests)
     })
     .then(event => {
         res.json({ message: 'Convites registrados com sucesso' })

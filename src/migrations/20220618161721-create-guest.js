@@ -2,21 +2,23 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('guests', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+      // id: {
+      //   allowNull: false,
+      //   autoIncrement: true,
+      //   primaryKey: true,
+      //   type: Sequelize.INTEGER
+      // },
       eventId: {
         type: Sequelize.INTEGER,
         references: { model: 'events', key: 'id' },
         onDelete: 'cascade',
+        primaryKey: true,
       },
       userId: {
         type: Sequelize.INTEGER,
         references: { model: 'users', key: 'id' },
         onDelete: 'cascade',
+        primaryKey: true,
       },
       organizer: {
         type: Sequelize.BOOLEAN,

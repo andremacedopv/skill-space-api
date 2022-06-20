@@ -4,21 +4,23 @@ const sequelize = require('sequelize');
 
 // Model definition
 const Guest = db.define('guest', {
-    id: {
-      type: sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true
-    },
+    // id: {
+    //   type: sequelize.INTEGER,
+    //   autoIncrement: true,
+    //   allowNull: false,
+    //   primaryKey: true
+    // },
     eventId: {
       type: sequelize.INTEGER,
       references: { model: 'events', key: 'id' },
       onDelete: 'cascade',
+      primaryKey: true
     },
     userId: {
       type: sequelize.INTEGER,
       references: { model: 'users', key: 'id' },
       onDelete: 'cascade',
+      primaryKey: true
     },
     organizer: {
       type: sequelize.BOOLEAN,

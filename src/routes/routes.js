@@ -19,10 +19,10 @@ router.post('/address/create', addressesController.create);
 router.put('/address/update/:id', addressesController.update);
 router.delete('/address/delete/:id', addressesController.delete);
 
-router.delete('/event/guest/delete/:id', guestController.delete);
-router.put('/event/guest/update/:id', guestController.update)
-router.put('/event/guest/presence', guestController.confirmPresence)
-router.get('/event/guest/:id', guestController.show);
+router.delete('/event/:event_id/guest/delete/:user_id', guestController.delete);
+router.put('/event/:event_id/guest/update/:user_id', guestController.update)
+router.get('/event/:event_id/guest/:user_id', guestController.show);
+router.put('/event/:event_id/guest/presence', guestController.confirmPresence)
 
 router.get('/event/guests/:id', eventsController.invites);
 router.post('/event/invite/:id', eventsController.setInvites);

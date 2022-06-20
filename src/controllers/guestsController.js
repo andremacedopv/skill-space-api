@@ -5,7 +5,12 @@ const User = require('../models/user');
 // Methods
 exports.update = (req, res, next) => {
     const newGuest = req.body;
-    Guest.findByPk(req.params.id)
+    Guest.findOne({
+        where: {
+            eventId: req.params.event_id,
+            userId: req.params.user_id
+        }
+    })
     .then(guest => {
         guest.organizer = (newGuest.organizer != null)? newGuest.organizer : guest.organizer;
         guest.present = (newGuest.present != null)? newGuest.present : guest.present;
@@ -22,7 +27,13 @@ exports.update = (req, res, next) => {
 }
 
 exports.show = (req, res, next) => {
-    Guest.findByPk(req.params.id, { include: User.scope('minimal') })
+    Guest.findOne({
+        where: {
+            eventId: req.params.event_id,
+            userId: req.params.user_id
+        },
+        include: User.scope('minimal')
+    })
     .then(guest => {
         res.json({ event: guest })
     })
@@ -33,7 +44,12 @@ exports.show = (req, res, next) => {
 }
 
 exports.delete = (req, res, next) => {
-    Guest.findByPk(req.params.id)
+    Guest.findOne({
+        where: {
+            eventId: req.params.event_id,
+            userId: req.params.user_id
+        }
+    })
     .then(guest => {
         return guest.destroy()
     })
@@ -48,12 +64,12 @@ exports.delete = (req, res, next) => {
 
 exports.confirmPresence = (req, res, next) => {
     const body = req.body
-    let guests = []
     Guest.update(
         { present: true },
         {
             where: {
-                id: body.guests
+                userId: body.guests,
+                eventId: req.params.event_id
             }
         }
     )
