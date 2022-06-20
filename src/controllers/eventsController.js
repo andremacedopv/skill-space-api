@@ -130,12 +130,6 @@ exports.createFeedback = async (req, res, next) => {
 
     try {
         await Event.findByPk(req.params.id)
-        const existingFeedback = await EventFeedback.findOne({ where: { userId: req.user.id, eventId: req.params.id } })
-
-        if(existingFeedback) {
-            const error = new Error("Can't create more than one feedback per user")
-            throw error
-        }
 
         const feedback = await EventFeedback.create({
             description: feedbackParams.description,
