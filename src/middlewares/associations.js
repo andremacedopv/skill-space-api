@@ -3,6 +3,7 @@ const InvitedSpeaker = require("../models/invitedSpeaker");
 const InvitedSpeakerEvent = require("../models/invitedSpeakerEvent");
 const User = require('../models/user');
 const Address = require('../models/address')
+const Guest = require('../models/guest')
 const EventFeedback = require('../models/eventFeedback')
 
 const associateModels = (req, res, next) => {
@@ -16,6 +17,19 @@ const associateModels = (req, res, next) => {
   })
   User.belongsTo(Address);
 
+  User.hasMany(Guest, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  });
+  Guest.belongsTo(User);
+  Event.hasMany(Guest, {
+    foreignKey: 'eventId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  });
+  Guest.belongsTo(Event);
+  
   EventFeedback.belongsTo(User)
   EventFeedback.belongsTo(Event)
   Event.hasMany(EventFeedback)

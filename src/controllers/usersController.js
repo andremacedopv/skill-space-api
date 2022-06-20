@@ -1,6 +1,7 @@
 // Imports
 const User = require('../models/user');
 const Address = require('../models/address')
+const Guest = require('../models/guest')
 const { validationResult } = require('express-validator/check')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -220,6 +221,18 @@ exports.activate = (req, res, next) => {
     })
     .then(response => {
         res.json({message: `${response.name} activated`})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json({error: err})
+    })
+}
+
+exports.invitations = (req, res, next) => {
+    const userReq = req.user
+    User.scope('minimal').findByPk(userReq.id, { include: Guest })
+    .then(user => {
+      res.json({invitations: user.guests})
     })
     .catch(err => {
       console.log(err)

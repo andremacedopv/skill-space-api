@@ -5,6 +5,7 @@ const router = express.Router();
 const addressesController = require('../controllers/addressesController')
 const eventsController = require('../controllers/eventsController')
 const invitedSpeakersController = require('../controllers/invitedSpeakersController')
+const guestController = require('../controllers/guestsController')
 
 const isAuth = require('../middlewares/is-auth')
 
@@ -18,6 +19,13 @@ router.post('/address/create', addressesController.create);
 router.put('/address/update/:id', addressesController.update);
 router.delete('/address/delete/:id', addressesController.delete);
 
+router.delete('/event/:event_id/guest/delete/:user_id', guestController.delete);
+router.put('/event/:event_id/guest/update/:user_id', guestController.update)
+router.get('/event/:event_id/guest/:user_id', guestController.show);
+router.put('/event/:event_id/guest/presence', guestController.confirmPresence)
+
+router.get('/event/guests/:id', eventsController.invites);
+router.post('/event/invite/:id', eventsController.setInvites);
 router.get('/event', eventsController.index);
 router.post('/event/create', eventsController.create);
 router.put('/event/update/:id', eventsController.update);

@@ -1,5 +1,6 @@
 // Imports
 const Event = require('../models/event');
+const Guest = require('../models/guest')
 const EventFeedback = require('../models/eventFeedback');
 const InvitedSpeaker = require('../models/invitedSpeaker');
 
@@ -26,6 +27,16 @@ exports.create = (req, res, next) => {
     })
     .then((newEvent) => {
         newEvent.setInvitedSpeakers(event.invitedSpeakers)
+        return newEvent
+    })
+    .then(newEvent => {
+        if(event.guests != null) {
+            const invites = [...new Set(event.guests)]
+            var guests = invites.map(u => ({
+                userId: u, eventId: newEvent.id
+            }))
+            Guest.bulkCreate(guests)
+        }
         return newEvent
     })
     .then(newEvent => {
@@ -84,18 +95,41 @@ exports.delete = (req, res, next) => {
     }) 
 }
 
+exports.setInvites = (req, res, next) => {
+    const invites = req.body
+    Event.findByPk(req.params.id)
+    .then(event => {
+        var guests = invites.users.map(u => ({
+            userId: u, eventId: event.id
+        }))
+        return Guest.bulkCreate(guests)
+    })
+    .then(event => {
+        res.json({ message: 'Convites registrados com sucesso' })
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }) 
+}
+
+exports.invites = (req, res, next) => {
+    Event.findByPk(req.params.id, { include: Guest })
+    .then(event => {
+      res.json({invitations: event.guests})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(422).json({error: err})
+    })
+}
+
 exports.createFeedback = async (req, res, next) => {
     
     const feedbackParams = req.body;
 
     try {
         await Event.findByPk(req.params.id)
-        const existingFeedback = await EventFeedback.findOne({ where: { userId: req.user.id, eventId: req.params.id } })
-
-        if(existingFeedback) {
-            const error = new Error("Can't create more than one feedback per user")
-            throw error
-        }
 
         const feedback = await EventFeedback.create({
             description: feedbackParams.description,

@@ -3,12 +3,6 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('eventFeedbacks', {
-      id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-      },
       description: {
           type: Sequelize.TEXT,
           allowNull: false
@@ -20,12 +14,14 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         references: { model: 'users', key: 'id' },
-        onDelete: 'SET NULL',
+        onDelete: 'cascade',
+        primaryKey: true
       },
       eventId: {
         type: Sequelize.INTEGER,
         references: { model: 'events', key: 'id' },
         onDelete: 'cascade',
+        primaryKey: true
       },
       updatedAt: Sequelize.DATE,
       createdAt: Sequelize.DATE
