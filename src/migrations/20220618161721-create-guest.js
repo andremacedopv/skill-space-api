@@ -20,15 +20,18 @@ module.exports = {
       },
       organizer: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        allowNull: false,
+        defaultValue: false
       },
       present: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       status: {
         type: Sequelize.ENUM,
         values: ['Confirmed','Invitation Sent','Declined','Maybe','Invitation Pending'],
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'Invitation Pending'
       },
       createdAt: {
         allowNull: false,
@@ -36,7 +39,7 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       }
     });
   },

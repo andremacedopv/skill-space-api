@@ -49,19 +49,17 @@ exports.delete = (req, res, next) => {
 exports.confirmPresence = (req, res, next) => {
     const body = req.body
     let guests = []
-    body.guests.forEach((guestId, i) => {
-        Guest.findByPk(guestId)
-        .then(guest => {
-            guest.present = true
-            return guest.save()
-        })
-        .then(guest => {
-            guests.push(guest)
-        })
-        .catch(e => {
-            console.log(e)
-            res.status(422).json({ error: e })
-        }) 
+    Guest.update(
+        { present: true },
+        {
+            where: {
+                id: body.guests
+            }
+        }
+    )
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
     }) 
     res.json({ message: 'Presenças confirmadas com sucesso' })
 }

@@ -22,15 +22,18 @@ const Guest = db.define('guest', {
     },
     organizer: {
       type: sequelize.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      defaultValue: false
     },
     present: {
-      type: sequelize.BOOLEAN
+      type: sequelize.BOOLEAN,
+      defaultValue: false
     },
     status: {
       type: sequelize.ENUM,
       values: ['Confirmed','Invitation Sent','Declined','Maybe','Invitation Pending'],
-      allowNull: false
+      allowNull: false,
+      defaultValue: 'Invitation Pending'
     },
 });
 
