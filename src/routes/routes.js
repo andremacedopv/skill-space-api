@@ -5,7 +5,8 @@ const router = express.Router();
 const addressesController = require('../controllers/addressesController')
 const eventsController = require('../controllers/eventsController')
 const invitedSpeakersController = require('../controllers/invitedSpeakersController')
-const guestController = require('../controllers/guestsController')
+const guestsController = require('../controllers/guestsController')
+const tagsController = require('../controllers/tagsController')
 
 const isAuth = require('../middlewares/is-auth')
 
@@ -19,10 +20,10 @@ router.post('/address/create', addressesController.create);
 router.put('/address/update/:id', addressesController.update);
 router.delete('/address/delete/:id', addressesController.delete);
 
-router.delete('/event/:event_id/guest/delete/:user_id', guestController.delete);
-router.put('/event/:event_id/guest/update/:user_id', guestController.update)
-router.get('/event/:event_id/guest/:user_id', guestController.show);
-router.put('/event/:event_id/guest/presence', guestController.confirmPresence)
+router.delete('/event/:event_id/guest/delete/:user_id', guestsController.delete);
+router.put('/event/:event_id/guest/update/:user_id', guestsController.update)
+router.get('/event/:event_id/guest/:user_id', guestsController.show);
+router.put('/event/:event_id/guest/presence', guestsController.confirmPresence)
 
 router.get('/event/guests/:id', eventsController.invites);
 router.post('/event/invite/:id', eventsController.setInvites);
@@ -39,5 +40,11 @@ router.put('/invited-speaker/update/:id', invitedSpeakersController.update);
 router.delete('/invited-speaker/delete/:id', invitedSpeakersController.delete);
 router.get('/invited-speaker/:id', invitedSpeakersController.show);
 router.get('/invited-speaker', invitedSpeakersController.index);
+
+router.get('/tag', tagsController.index);
+router.get('/tag/:id', tagsController.show);
+router.post('/tag/create', tagsController.create);
+router.put('/tag/update/:id', tagsController.update);
+router.delete('/tag/delete/:id', tagsController.delete);
 
 module.exports = router;

@@ -6,7 +6,8 @@ const Tag = db.define('tags', {
     type: sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    unique: true
   },
   name: {
     type: sequelize.STRING,
