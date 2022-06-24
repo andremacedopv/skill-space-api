@@ -31,6 +31,7 @@ exports.update = (req, res, next) => {
     const updatedTag = req.body;
     Tag.findByPk(req.params.id)
     .then(tag => {
+        if(!tag) throw new Error("Tag não encontrada")
         tag.name = updatedTag.name? updatedTag.name : tag.name;
         return tag.save()
     })
@@ -46,6 +47,7 @@ exports.update = (req, res, next) => {
 exports.show = (req, res, next) => {
     Tag.findByPk(req.params.id)
     .then(tag => {
+        if(!tag) throw new Error("Tag não encontrada")
         res.json({ tag: tag })
     })
     .catch(e => {
@@ -57,6 +59,7 @@ exports.show = (req, res, next) => {
 exports.delete = (req, res, next) => {
     Tag.findByPk(req.params.id)
     .then(tag => {
+        if(!tag) throw new Error("Tag não encontrada")
         return tag.destroy()
     })
     .then(response => {
