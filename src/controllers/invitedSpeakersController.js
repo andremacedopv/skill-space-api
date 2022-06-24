@@ -37,6 +37,7 @@ exports.update = (req, res, next) => {
   const newInvitedSpeaker = req.body;
   InvitedSpeaker.findByPk(req.params.id)
   .then(invitedSpeaker => {
+      if(!invitedSpeaker) throw new Error("Convidado não encontrado")
       invitedSpeaker.name = newInvitedSpeaker.name? newInvitedSpeaker.name : invitedSpeaker.name;
       invitedSpeaker.description = newInvitedSpeaker.description? newInvitedSpeaker.description : invitedSpeaker.description;
       invitedSpeaker.job = newInvitedSpeaker.job? newInvitedSpeaker.job : invitedSpeaker.job;
@@ -55,6 +56,7 @@ exports.update = (req, res, next) => {
 exports.show = (req, res, next) => {
   InvitedSpeaker.findByPk(req.params.id, {include: Event})
   .then(invitedSpeaker => {
+      if(!invitedSpeaker) throw new Error("Convidado não encontrado")
       res.json({ invitedSpeaker: invitedSpeaker })
   })
   .catch(e => {
@@ -66,6 +68,7 @@ exports.show = (req, res, next) => {
 exports.delete = (req, res, next) => {
   InvitedSpeaker.findByPk(req.params.id)
   .then(invitedSpeaker => {
+      if(!invitedSpeaker) throw new Error("Convidado não encontrado")
       return invitedSpeaker.destroy()
   })
   .then(response => {

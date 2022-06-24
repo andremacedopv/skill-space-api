@@ -105,6 +105,7 @@ exports.update = (req, res, next) => {
   const oldUser = req.user
   User.findByPk(oldUser.id)
   .then(user => {
+    if(!user) throw new Error("Usuário não encontrado")
     user.name = newUser.name ? newUser.name : user.name
     user.ddd = newUser.ddd ? newUser.ddd : user.ddd
     user.phone = newUser.phone ? newUser.phone : user.phone
@@ -125,6 +126,7 @@ exports.profile = (req, res, next) => {
     const userReq = req.user
     User.findByPk(userReq.id)
     .then(user => {
+      if(!user) throw new Error("Usuário não encontrado")
       let userLoaded = user.dataValues
       delete userLoaded.password
       res.json({user: userLoaded})
@@ -139,6 +141,7 @@ exports.show = (req, res, next) => {
     const userReq = req.user
     User.findByPk(req.params.id)
     .then(user => {
+      if(!user) throw new Error("Usuário não encontrado")
       let userLoaded = user.dataValues
       delete userLoaded.password
       if(!userReq.admin) {
@@ -169,6 +172,7 @@ exports.index = (req, res, next) => {
 exports.promote = (req, res, next) => {
     User.findByPk(req.params.id)
     .then(user => {
+        if(!user) throw new Error("Usuário não encontrado")
         user.admin = true
         return user.save()
     })
@@ -184,6 +188,7 @@ exports.promote = (req, res, next) => {
 exports.demote = (req, res, next) => {
     User.findByPk(req.params.id)
     .then(user => {
+        if(!user) throw new Error("Usuário não encontrado")
         user.admin = false
         return user.save()
     })
@@ -201,6 +206,7 @@ exports.demote = (req, res, next) => {
 exports.deactivate = (req, res, next) => {
     User.findByPk(req.params.id)
     .then(user => {
+        if(!user) throw new Error("Usuário não encontrado")
         user.is_active = false
         return user.save()
     })
@@ -216,6 +222,7 @@ exports.deactivate = (req, res, next) => {
 exports.activate = (req, res, next) => {
     User.findByPk(req.params.id)
     .then(user => {
+        if(!user) throw new Error("Usuário não encontrado")
         user.is_active = true
         return user.save()
     })
@@ -232,6 +239,7 @@ exports.invitations = (req, res, next) => {
     const userReq = req.user
     User.scope('minimal').findByPk(userReq.id, { include: Guest })
     .then(user => {
+      if(!user) throw new Error("Usuário não encontrado")
       res.json({invitations: user.guests})
     })
     .catch(err => {
