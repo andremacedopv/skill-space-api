@@ -7,6 +7,7 @@ const eventsController = require('../controllers/eventsController')
 const invitedSpeakersController = require('../controllers/invitedSpeakersController')
 const guestsController = require('../controllers/guestsController')
 const tagsController = require('../controllers/tagsController')
+const postsController = require('../controllers/postsController')
 
 const isAuth = require('../middlewares/is-auth')
 
@@ -46,5 +47,11 @@ router.get('/tag/:id', tagsController.show);
 router.post('/tag/create', tagsController.create);
 router.put('/tag/update/:id', tagsController.update);
 router.delete('/tag/delete/:id', tagsController.delete);
+
+router.get('/post', postsController.index);
+router.get('/post/:id', postsController.show);
+router.post('/post/create', isAuth, postsController.create);
+router.put('/post/update/:id', postsController.update);
+router.delete('/post/delete/:id', postsController.delete);
 
 module.exports = router;
