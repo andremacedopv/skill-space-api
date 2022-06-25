@@ -15,7 +15,6 @@ exports.index = (req, res, next) => {
     })  
 }
 
-
 exports.create = async (req, res, next) => {
     try{
         const post = req.body;
@@ -41,6 +40,7 @@ exports.update = (req, res, next) => {
         if(!post) throw new Error("Post não encontrado")
         post.name = updatedPost.name? updatedPost.name : post.name;
         post.description = updatedPost.description? updatedPost.description : post.description;
+        post.tags && post.setTags(updatedPost.tags)
         return post.save()
     })
     .then(response => {
