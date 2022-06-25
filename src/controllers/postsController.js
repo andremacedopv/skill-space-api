@@ -1,9 +1,11 @@
 // Imports
 const Post = require('../models/post');
+const Tag = require('../models/tag')
+const PostTag = require('../models/postTag')
 
 // Methods
 exports.index = (req, res, next) => {
-    Post.findAll()
+    Post.findAll({include: Tag})
     .then(posts => {
         res.json({ posts: posts });
     })
@@ -13,21 +15,24 @@ exports.index = (req, res, next) => {
     })  
 }
 
-exports.create = (req, res, next) => {
-    const post = req.body;
-    Post.create({
-        name: post.name,
-        description: post.description,
-        userId: req.user.id,
-        parentPostId: post.parentPostId
-    })
-    .then(newPost => {
+
+exports.create = async (req, res, next) => {
+    try{
+        const post = req.body;
+        const newPost = await Post.create({
+            name: post.name,
+            description: post.description,
+            userId: req.user.id,
+            parentPostId: post.parentPostId
+        })
+        await newPost.setTags(post.tags)
         res.json({ post: newPost.dataValues });
-    })
-    .catch(e => {
+    }
+    catch(e){
         console.log(e)
         res.status(422).json({ error: e.toString() })
-    }) 
+    }
+
 }
 
 exports.update = (req, res, next) => {
@@ -49,9 +54,9 @@ exports.update = (req, res, next) => {
 }
 
 exports.show = (req, res, next) => {
-    Post.findByPk(req.params.id)
+    Post.findByPk(req.params.id, {include: Tag})
     .then(post => {
-        if(!post) throw new Error("Post não encontrada")
+        if(!post) throw new Error("Post não encontrado")
         res.json({ post: post })
     })
     .catch(e => {

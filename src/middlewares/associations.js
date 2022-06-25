@@ -6,6 +6,8 @@ const Address = require('../models/address')
 const Guest = require('../models/guest')
 const EventFeedback = require('../models/eventFeedback')
 const Post = require('../models/post')
+const Tag = require('../models/tag')
+const PostTag = require('../models/postTag')
 
 const associateModels = (req, res, next) => {
   Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent });
@@ -23,23 +25,28 @@ const associateModels = (req, res, next) => {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   });
-  Guest.belongsTo(User);
   Event.hasMany(Guest, {
     foreignKey: 'eventId',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   });
+  Guest.belongsTo(User);
   Guest.belongsTo(Event);
   
   EventFeedback.belongsTo(User)
   EventFeedback.belongsTo(Event)
   Event.hasMany(EventFeedback)
 
+  // NX1 Relation between Post and User
   Post.belongsTo(User)
   User.hasMany(Post, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
+
+  // NXM Relation between Post and Tag
+  Post.belongsToMany(Tag, {through: PostTag})
+  Tag.belongsToMany(Post, {through: PostTag})
 
   next()
 }

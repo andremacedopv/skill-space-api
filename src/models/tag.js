@@ -7,11 +7,11 @@ const Tag = db.define('tags', {
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
-    unique: true
   },
   name: {
     type: sequelize.STRING,
     allowNull: false,
+    unique: true
   }
 })
 
