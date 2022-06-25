@@ -50,6 +50,7 @@ router.delete('/tag/delete/:id', tagsController.delete);
 
 router.get('/post', postsController.index);
 router.get('/post/:id', postsController.show);
+router.get('/post/:id/comments', postsController.comments);
 router.post('/post/create', isAuth, postsController.create);
 router.put('/post/update/:id', postsController.update);
 router.delete('/post/delete/:id', postsController.delete);

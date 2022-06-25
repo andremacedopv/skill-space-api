@@ -64,6 +64,24 @@ exports.show = (req, res, next) => {
     }) 
 }
 
+exports.comments = async (req, res, next) => {
+
+    try {
+        const post = await Post.findByPk(req.params.id, {include: Tag})
+        if(!post) throw new Error("Post não encontrado")
+
+        const comments = await Post.findAll({where: {
+            parentPostId: req.params.id
+        }})
+        
+        res.json({ comments: comments })
+    }
+    catch (e) {
+        console.log(e)
+        res.status(422).json({ error: e.toString() })
+    }
+}
+
 exports.delete = (req, res, next) => {
     Post.findByPk(req.params.id)
     .then(post => {
