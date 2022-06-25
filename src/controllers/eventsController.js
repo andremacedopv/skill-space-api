@@ -16,36 +16,31 @@ exports.index = (req, res, next) => {
     })  
 }
 
-exports.create = (req, res, next) => {
+exports.create = async (req, res, next) => {
     const event = req.body;
-    Event.create({
-        name: event.name,
-        description: event.description,
-        date: event.date,
-        remote: event.remote,
-        link: event.link
-    })
-    .then((newEvent) => {
-        newEvent.setInvitedSpeakers(event.invitedSpeakers)
-        return newEvent
-    })
-    .then(newEvent => {
+
+    try {
+        newEvent = await Event.create({
+            name: event.name,
+            description: event.description,
+            date: event.date,
+            remote: event.remote,
+            link: event.link
+        })
+        await newEvent.setInvitedSpeakers(event.invitedSpeakers)
         if(event.guests != null) {
             const invites = [...new Set(event.guests)]
             var guests = invites.map(u => ({
                 userId: u, eventId: newEvent.id
             }))
-            Guest.bulkCreate(guests)
+            await Guest.bulkCreate(guests)
         }
-        return newEvent
-    })
-    .then(newEvent => {
         res.json({ event: newEvent.dataValues });
-    })
-    .catch(e => {
+    }
+    catch(e) {
         console.log(e)
         res.status(422).json({ error: e.toString() })
-    }) 
+    }
 }
 
 exports.update = (req, res, next) => {

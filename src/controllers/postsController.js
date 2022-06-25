@@ -32,7 +32,6 @@ exports.create = async (req, res, next) => {
         console.log(e)
         res.status(422).json({ error: e.toString() })
     }
-
 }
 
 exports.update = (req, res, next) => {
