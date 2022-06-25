@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Address = require('../models/address')
 const Guest = require('../models/guest')
 const EventFeedback = require('../models/eventFeedback')
+const Post = require('../models/post')
 
 const associateModels = (req, res, next) => {
   Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent });
@@ -33,6 +34,12 @@ const associateModels = (req, res, next) => {
   EventFeedback.belongsTo(User)
   EventFeedback.belongsTo(Event)
   Event.hasMany(EventFeedback)
+
+  Post.belongsTo(User)
+  User.hasMany(Post, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
 
   next()
 }
