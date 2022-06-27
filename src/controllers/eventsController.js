@@ -12,46 +12,43 @@ exports.index = (req, res, next) => {
     })
     .catch(e => {
         console.log(e)
-        res.status(500).json({ error: e })
+        res.status(500).json({ error: e.toString() })
     })  
 }
 
-exports.create = (req, res, next) => {
+exports.create = async (req, res, next) => {
     const event = req.body;
-    Event.create({
-        name: event.name,
-        description: event.description,
-        date: event.date,
-        remote: event.remote,
-        link: event.link
-    })
-    .then((newEvent) => {
-        newEvent.setInvitedSpeakers(event.invitedSpeakers)
-        return newEvent
-    })
-    .then(newEvent => {
+
+    try {
+        newEvent = await Event.create({
+            name: event.name,
+            description: event.description,
+            date: event.date,
+            remote: event.remote,
+            link: event.link
+        })
+        await newEvent.setInvitedSpeakers(event.invitedSpeakers)
         if(event.guests != null) {
             const invites = [...new Set(event.guests)]
             var guests = invites.map(u => ({
                 userId: u, eventId: newEvent.id
             }))
-            Guest.bulkCreate(guests)
+            await Guest.bulkCreate(guests)
         }
-        return newEvent
-    })
-    .then(newEvent => {
         res.json({ event: newEvent.dataValues });
-    })
-    .catch(e => {
+    }
+    catch(e) {
         console.log(e)
-        res.status(422).json({ error: e })
-    }) 
+        res.status(422).json({ error: e.toString() })
+    }
 }
 
 exports.update = (req, res, next) => {
     const newEvent = req.body;
     Event.findByPk(req.params.id)
     .then(event => {
+        if(!event) throw new Error("Evento não encontrado")
+
         event.name = newEvent.name? newEvent.name : event.name;
         event.description = newEvent.description? newEvent.description : event.description;
         event.date = newEvent.date? newEvent.date : event.date;
@@ -66,24 +63,26 @@ exports.update = (req, res, next) => {
     .catch(e => {
         console.log(e)
         
-        res.status(422).json({ error: e })
+        res.status(422).json({ error: e.toString() })
     }) 
 }
 
 exports.show = (req, res, next) => {
     Event.findByPk(req.params.id, { include: InvitedSpeaker })
     .then(event => {
+        if(!event) throw new Error("Evento não encontrado")
         res.json({ event: event })
     })
     .catch(e => {
         console.log(e)
-        res.status(422).json({ error: e })
+        res.status(422).json({ error: e.toString() })
     }) 
 }
 
 exports.delete = (req, res, next) => {
     Event.findByPk(req.params.id)
     .then(event => {
+        if(!event) throw new Error("Evento não encontrado")
         return event.destroy()
     })
     .then(response => {
@@ -91,7 +90,7 @@ exports.delete = (req, res, next) => {
     })
     .catch(e => {
         console.log(e)
-        res.status(422).json({ error: e })
+        res.status(422).json({ error: e.toString() })
     }) 
 }
 
@@ -99,6 +98,8 @@ exports.setInvites = (req, res, next) => {
     const invites = req.body
     Event.findByPk(req.params.id)
     .then(event => {
+        if(!event) throw new Error("Evento não encontrado")
+
         var guests = invites.users.map(u => ({
             userId: u, eventId: event.id
         }))
@@ -109,7 +110,7 @@ exports.setInvites = (req, res, next) => {
     })
     .catch(e => {
         console.log(e)
-        res.status(422).json({ error: e })
+        res.status(422).json({ error: e.toString() })
     }) 
 }
 
@@ -120,7 +121,7 @@ exports.invites = (req, res, next) => {
     })
     .catch(err => {
       console.log(err)
-      res.status(422).json({error: err})
+      res.status(422).json({error: err.toString()})
     })
 }
 

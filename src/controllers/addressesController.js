@@ -30,6 +30,7 @@ exports.create = (req, res, next) => {
 exports.show = (req, res, next) => {
   Address.findByPk(req.params.id)
   .then(address => {
+    if(!address) throw new Error("Tag não encontrada")
     res.json({address: address})
   })
   .catch(err => {
@@ -42,6 +43,7 @@ exports.update = (req, res, next) => {
   const newAddress = req.body
   Address.findByPk(req.params.id)
   .then(address => {
+    if(!address) throw new Error("Tag não encontrada")
     address.country = newAddress.country ? newAddress.country : address.country
     address.state = newAddress.state ? newAddress.state : address.state
     address.city = newAddress.city ? newAddress.city : address.city
@@ -62,6 +64,7 @@ exports.update = (req, res, next) => {
 exports.delete = (req, res, next) => {
   Address.findByPk(req.params.id)
   .then(address => {
+    if(!address) throw new Error("Tag não encontrada")
     return address.destroy()
   })
   .then(response => {
