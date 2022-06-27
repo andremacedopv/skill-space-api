@@ -33,6 +33,7 @@ exports.update = (req, res, next) => {
     const newAT = req.body;
     ActivityType.findByPk(req.params.id)
     .then(at => {
+        if(!at) throw new Error("Tipo de atividade não encontrada")
         at.name = newAT.name? newAT.name : at.name;
         at.description = newAT.description? newAT.description : at.description;
         return at.save()
@@ -49,6 +50,7 @@ exports.update = (req, res, next) => {
 exports.show = (req, res, next) => {
     ActivityType.findByPk(req.params.id, { include: Activity })
     .then(at => {
+        if(!at) throw new Error("Tipo de atividade não encontrada")
         res.json({ activityType: at })
     })
     .catch(e => {
@@ -60,6 +62,7 @@ exports.show = (req, res, next) => {
 exports.delete = (req, res, next) => {
     ActivityType.findByPk(req.params.id)
     .then(at => {
+        if(!at) throw new Error("Tipo de atividade não encontrada")
         return at.destroy()
     })
     .then(response => {

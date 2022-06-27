@@ -33,6 +33,7 @@ exports.update = (req, res, next) => {
     const newCategory = req.body;
     Category.findByPk(req.params.id)
     .then(category => {
+        if(!category) throw new Error("Tipo de atividade não encontrada")
         category.name = newCategory.name? newCategory.name : category.name;
         category.description = newCategory.description? newCategory.description : category.description;
         return category.save()
@@ -49,6 +50,7 @@ exports.update = (req, res, next) => {
 exports.show = (req, res, next) => {
     Category.findByPk(req.params.id, { include: Activity })
     .then(category => {
+        if(!category) throw new Error("Tipo de atividade não encontrada")
         res.json({ category: category })
     })
     .catch(e => {
@@ -60,6 +62,7 @@ exports.show = (req, res, next) => {
 exports.delete = (req, res, next) => {
     Category.findByPk(req.params.id)
     .then(category => {
+        if(!category) throw new Error("Tipo de atividade não encontrada")
         return category.destroy()
     })
     .then(response => {

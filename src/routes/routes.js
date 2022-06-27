@@ -60,5 +60,9 @@ router.get('/activity/:id', activitiesController.show);
 router.post('/activity/create', activitiesController.create);
 router.put('/activity/update/:id', activitiesController.update);
 router.delete('/activity/delete/:id', activitiesController.delete);
+router.post('/activity/requirements/add/:id', activitiesController.addRequirements);
+router.get('/activity/requirements/:id', activitiesController.requirements);
+router.get('/activity/dependents/add/:id', activitiesController.addDependents);
+router.get('/activity/dependents/:id', activitiesController.dependents);
 
 module.exports = router;
