@@ -37,12 +37,6 @@ const Activity = db.define('activity', {
     allowNull: false,
     defaultValue: false
   },
-}, {
-  scopes: {
-    noAssociation: {
-      attributes: { exclude: ['eventId', 'activityTypeId', 'categoryId'] },
-    },
-  }  
 })
 
 module.exports = Activity
