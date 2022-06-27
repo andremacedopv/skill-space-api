@@ -5,10 +5,6 @@ const User = require('../models/user');
 const Address = require('../models/address')
 const Guest = require('../models/guest')
 const EventFeedback = require('../models/eventFeedback')
-const Activity = require('../models/activity')
-const Category = require('../models/category')
-const ActivityRequirement = require('../models/activityRequirement')
-const ActivityType = require('../models/activityType')
 
 const associateModels = (req, res, next) => {
   Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent });
@@ -37,44 +33,6 @@ const associateModels = (req, res, next) => {
   EventFeedback.belongsTo(User)
   EventFeedback.belongsTo(Event)
   Event.hasMany(EventFeedback)
-
-  Activity.hasMany(ActivityRequirement, {
-    foreignKey: 'require',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-  })
-  ActivityRequirement.belongsTo(Activity, {
-    foreignKey: 'require',
-  })
-  Activity.hasMany(ActivityRequirement, {
-    foreignKey: 'required',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-  })
-  ActivityRequirement.belongsTo(Activity, {
-    foreignKey: 'required',
-  })
-
-  Category.hasMany(Activity, {
-    foreignKey: 'categoryId',
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE'
-  })
-  Activity.belongsTo(Category);
-
-  Event.hasMany(Activity, {
-    foreignKey: 'eventId',
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE'
-  })
-  Activity.belongsTo(Event);
-
-  ActivityType.hasMany(Activity, {
-    foreignKey: 'activityTypeId',
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE'
-  })
-  Activity.belongsTo(ActivityType);
 
   next()
 }
