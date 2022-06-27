@@ -2,14 +2,14 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('activityRequirements', {
-      require: {
+      activityId: {
         type: Sequelize.INTEGER,
         references: { model: 'activities', key: 'id' },
         onDelete: 'cascade',
         primaryKey: true,
         allowNull: false,
       },
-      required: {
+      requirementId: {
         type: Sequelize.INTEGER,
         references: { model: 'activities', key: 'id' },
         onDelete: 'cascade',
