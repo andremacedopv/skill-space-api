@@ -38,18 +38,18 @@ const associateModels = (req, res, next) => {
   EventFeedback.belongsTo(Event)
   Event.hasMany(EventFeedback)
 
-  // Activity.belongsToMany(Activity, {
-  //   through: 'activityRequirements',
-  //   as: 'requirement',
-  //   foreignKey: 'activityId',
-  //   otherKey: 'requirementId'
-  // })
-  // Activity.belongsToMany(Activity, {
-  //   through: 'activityRequirements',
-  //   as: 'dependents',
-  //   foreignKey: 'requirementId',
-  //   otherKey: 'activityId'
-  // })
+  Activity.belongsToMany(Activity, {
+    through: 'activityRequirements',
+    as: { singular: 'requirement', plural: 'requirements' },
+    foreignKey: 'activityId',
+    otherKey: 'requirementId'
+  })
+  Activity.belongsToMany(Activity, {
+    through: 'activityRequirements',
+    as: { singular: 'dependent', plural: 'dependents' },
+    foreignKey: 'requirementId',
+    otherKey: 'activityId'
+  })
 
   Category.hasMany(Activity, {
     foreignKey: 'categoryId',

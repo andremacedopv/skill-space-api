@@ -14,7 +14,7 @@ exports.index = (req, res, next) => {
             {model: ActivityType, attributes: ['id', 'name']},
             {model: Event, attributes: ['id', 'name']},
             {model: Category, attributes: ['id', 'name']},
-            // {model: Activity, as: 'requirement'}
+            {model: Activity, as: 'requirements'}
         ] 
     })
     .then(activities => {
