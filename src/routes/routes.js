@@ -6,6 +6,9 @@ const addressesController = require('../controllers/addressesController')
 const eventsController = require('../controllers/eventsController')
 const invitedSpeakersController = require('../controllers/invitedSpeakersController')
 const guestController = require('../controllers/guestsController')
+const activityTypesController = require('../controllers/activityTypesController')
+const categoriesController = require('../controllers/categoriesController')
+const activitiesController = require('../controllers/activitiesController')
 
 const isAuth = require('../middlewares/is-auth')
 
@@ -39,5 +42,23 @@ router.put('/invited-speaker/update/:id', invitedSpeakersController.update);
 router.delete('/invited-speaker/delete/:id', invitedSpeakersController.delete);
 router.get('/invited-speaker/:id', invitedSpeakersController.show);
 router.get('/invited-speaker', invitedSpeakersController.index);
+
+router.get('/activity/types', activityTypesController.index);
+router.get('/activity/types/:id', activityTypesController.show);
+router.post('/activity/types/create', activityTypesController.create);
+router.put('/activity/types/update/:id', activityTypesController.update);
+router.delete('/activity/types/delete/:id', activityTypesController.delete);
+
+router.get('/activity/category', categoriesController.index);
+router.get('/activity/category/:id', categoriesController.show);
+router.post('/activity/category/create', categoriesController.create);
+router.put('/activity/category/update/:id', categoriesController.update);
+router.delete('/activity/category/delete/:id', categoriesController.delete);
+
+router.get('/activity', activitiesController.index);
+router.get('/activity/:id', activitiesController.show);
+router.post('/activity/create', activitiesController.create);
+router.put('/activity/update/:id', activitiesController.update);
+router.delete('/activity/delete/:id', activitiesController.delete);
 
 module.exports = router;
