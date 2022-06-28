@@ -14,7 +14,7 @@ exports.index = (req, res, next) => {
             {model: ActivityType, attributes: ['id', 'name']},
             {model: Event, attributes: ['id', 'name']},
             {model: Category, attributes: ['id', 'name']},
-            {model: Activity, as: 'requirements'}
+            {model: Activity, as: 'requirements', attributes: ['id', 'name']}
         ] 
     })
     .then(activities => {
@@ -78,13 +78,13 @@ exports.update = (req, res, next) => {
 }
 
 exports.show = (req, res, next) => {
-    Activity.findByPk(req.params.id, { include: 
+    Activity.scope('noAssociation').findByPk(req.params.id, { include: 
         [
             {model: ActivityType, attributes: ['id', 'name']},
             {model: Event, attributes: ['id', 'name']},
             {model: Category, attributes: ['id', 'name']},
-            // {model: Activity, as: 'requirement'},
-            // {model: Activity, as: 'dependents'},
+            {model: Activity, as: 'requirements'},
+            {model: Activity, as: 'dependents'},
         ] 
     })
     .then(activity => {
@@ -143,13 +143,14 @@ exports.addDependents = (req, res, next) => {
 }
 
 exports.requirements = (req, res, next) => {
-    ActivityRequirement.findAll({
-        where: {
-            activityId: req.params.id
-        }
+    Activity.scope('noAssociation').findByPk(req.params.id, { include: 
+        [
+            {model: Activity, as: 'requirements'},
+        ] 
     })
-    .then(requirement => {
-        res.json({ activityRequirements: requirement })
+    .then(activity => {
+        if(!activity) throw new Error("Atividade não encontrada")
+        res.json({ requirements: activity.requirements })
     })
     .catch(e => {
         console.log(e)
@@ -158,13 +159,14 @@ exports.requirements = (req, res, next) => {
 }
 
 exports.dependents = (req, res, next) => {
-    ActivityRequirement.findAll({
-        where: {
-            requirementId: req.params.id
-        }
+    Activity.scope('noAssociation').findByPk(req.params.id, { include: 
+        [
+            {model: Activity, as: 'dependents'},
+        ] 
     })
-    .then(requirement => {
-        res.json({ dependents: requirement })
+    .then(activity => {
+        if(!activity) throw new Error("Atividade não encontrada")
+        res.json({ requirements: activity.dependents })
     })
     .catch(e => {
         console.log(e)
