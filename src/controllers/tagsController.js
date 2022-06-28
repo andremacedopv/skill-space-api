@@ -88,6 +88,8 @@ exports.follow = async (req, res, next) => {
 }
 exports.toggleFollow = async (req, res, next) => {
     try{
+        const count = Tag.count({ where: { id: req.params.id } })
+        if (count == 0) throw new Error("Tag não encontrada")
         const tagUser = await TagUser.findOne({
             where: {
                 tagId: req.params.id,
