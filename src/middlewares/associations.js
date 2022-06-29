@@ -5,6 +5,10 @@ const User = require('../models/user');
 const Address = require('../models/address')
 const Guest = require('../models/guest')
 const EventFeedback = require('../models/eventFeedback')
+const Activity = require('../models/activity')
+const Category = require('../models/category')
+const ActivityRequirement = require('../models/activityRequirement')
+const ActivityType = require('../models/activityType')
 const Post = require('../models/post')
 const Tag = require('../models/tag')
 const PostTag = require('../models/postTag')
@@ -41,6 +45,40 @@ const associateModels = (req, res, next) => {
   EventFeedback.belongsTo(User)
   EventFeedback.belongsTo(Event)
   Event.hasMany(EventFeedback)
+
+  Activity.belongsToMany(Activity, {
+    through: 'activityRequirements',
+    as: { singular: 'requirement', plural: 'requirements' },
+    foreignKey: 'activityId',
+    otherKey: 'requirementId'
+  })
+  Activity.belongsToMany(Activity, {
+    through: 'activityRequirements',
+    as: { singular: 'dependent', plural: 'dependents' },
+    foreignKey: 'requirementId',
+    otherKey: 'activityId'
+  })
+
+  Category.hasMany(Activity, {
+    foreignKey: 'categoryId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  Activity.belongsTo(Category);
+
+  Event.hasMany(Activity, {
+    foreignKey: 'eventId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  Activity.belongsTo(Event);
+
+  ActivityType.hasMany(Activity, {
+    foreignKey: 'activityTypeId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  Activity.belongsTo(ActivityType);
 
   // NX1 Relation between Post and User
   Post.belongsTo(User)
