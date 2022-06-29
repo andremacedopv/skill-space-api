@@ -2,7 +2,6 @@
 const User = require('../models/user');
 const Address = require('../models/address')
 const Guest = require('../models/guest')
-const Follower = require('../models/follower')
 const { validationResult } = require('express-validator/check')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
