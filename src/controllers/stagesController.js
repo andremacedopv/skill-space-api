@@ -1,9 +1,15 @@
 // Imports
 const Stage = require('../models/stage');
+const Activity = require('../models/activity')
 
 // Methods
 exports.index = (req, res, next) => {
-    Stage.findAll()
+    Stage.findAll({ 
+        include: [
+            {model: Activity, as: 'activities', attributes: ['id', 'name']},
+            {model: Stage, as: 'requirements', attributes: ['id', 'name']}
+        ] 
+    })
     .then(stages => {
         res.json({ stages: stages });
     })
@@ -13,39 +19,44 @@ exports.index = (req, res, next) => {
     })  
 }
 
-exports.create = (req, res, next) => {
+exports.create = async (req, res, next) => {
     const stage = req.body;
-    Stage.create({
-        name: stage.name,
-        description: stage.description,
-        hoursRequirement: stage.hoursRequirement,
-    })
-    .then(newStage => {
+    
+    try {
+        const newStage = await Stage.create({
+            name: stage.name,
+            description: stage.description,
+            hoursRequirement: stage.hoursRequirement,
+        })
+        await newStage.setRequirements(stage.requirements)
         res.json({ stage: newStage.dataValues });
-    })
-    .catch(e => {
+    }
+    catch(e) {
         console.log(e)
         res.status(422).json({ error: e.toString() })
-    }) 
+    }
 }
 
-exports.update = (req, res, next) => {
+exports.update = async (req, res, next) => {
     const updatedStage = req.body;
-    Stage.findByPk(req.params.id)
-    .then(stage => {
+
+    try {
+        const stage = await Stage.findByPk(req.params.id)
         if(!stage) throw new Error("Estágio não encontrado")
         stage.name = updatedStage.name? updatedStage.name : stage.name;
         stage.description = updatedStage.description? updatedStage.description : stage.description;
         stage.hoursRequirement = updatedStage.hoursRequirement? updatedStage.hoursRequirement : stage.hoursRequirement;
-        return stage.save()
-    })
-    .then(response => {
-        res.json({ stage: response.dataValues });
-    })
-    .catch(e => {
+        if(updatedStage.requirements) {
+            await stage.removeRequirements()
+            await stage.setRequirements(updatedStage.requirements)
+        }
+        await stage.save()
+        res.json({ stage: stage.dataValues });
+    }
+    catch(e) {
         console.log(e)      
         res.status(422).json({ error: e.toString() })
-    }) 
+    }
 }
 
 exports.show = (req, res, next) => {

@@ -20,6 +20,6 @@ const Post = db.define('stages', {
   hoursRequirement: {
     type: sequelize.INTEGER,
   },
-})
+},)
 
 module.exports = Post

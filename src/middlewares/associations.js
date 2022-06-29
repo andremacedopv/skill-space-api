@@ -96,6 +96,19 @@ const associateModels = (req, res, next) => {
   Activity.belongsTo(Stage)
   Stage.hasMany(Activity);
 
+  Stage.belongsToMany(Stage, {
+    through: 'stageRequirements',
+    as: { singular: 'requirement', plural: 'requirements' },
+    foreignKey: 'stageId',
+    otherKey: 'requirementId'
+  })
+  Stage.belongsToMany(Stage, {
+    through: 'stageRequirements',
+    as: { singular: 'dependent', plural: 'dependents' },
+    foreignKey: 'requirementId',
+    otherKey: 'stageId'
+  })
+
   next()
 }
 
