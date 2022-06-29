@@ -11,6 +11,7 @@ const activitiesController = require('../controllers/activitiesController')
 const guestsController = require('../controllers/guestsController')
 const tagsController = require('../controllers/tagsController')
 const postsController = require('../controllers/postsController')
+const stagesController = require('../controllers/stagesController')
 
 const isAuth = require('../middlewares/is-auth')
 
@@ -79,5 +80,11 @@ router.get('/post/:id/comments', postsController.comments);
 router.post('/post/create', isAuth, postsController.create);
 router.put('/post/update/:id', postsController.update);
 router.delete('/post/delete/:id', postsController.delete);
+
+router.get('/stage', stagesController.index);
+router.get('/stage/:id', stagesController.show);
+router.post('/stage/create', isAuth, stagesController.create);
+router.put('/stage/update/:id', stagesController.update);
+router.delete('/stage/delete/:id', stagesController.delete);
 
 module.exports = router;
