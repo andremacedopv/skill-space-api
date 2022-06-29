@@ -4,6 +4,7 @@ const Activity = require('../models/activity');
 const ActivityRequirement = require('../models/activityRequirement');
 const Category = require('../models/category');
 const Event = require('../models/event')
+const Stage = require('../models/stage')
 const constants = require('../lib/constants')
 
 // Methods
@@ -14,7 +15,8 @@ exports.index = (req, res, next) => {
             {model: ActivityType, attributes: ['id', 'name']},
             {model: Event, attributes: ['id', 'name']},
             {model: Category, attributes: ['id', 'name']},
-            {model: Activity, as: 'requirements', attributes: ['id', 'name']}
+            {model: Activity, as: 'requirements', attributes: ['id', 'name']},
+            {model: Stage, as: 'stage', attributes: ['id', 'name']}
         ] 
     })
     .then(activities => {
@@ -33,8 +35,9 @@ exports.create = (req, res, next) => {
         description: activity.description,
         categoryId: activity.category,
         activityTypeId: activity.activityType,
+        stageId: activity.stage,
         eventId: (activity.activityType == constants.EventTypeId)? activity.event : null,
-        mandatory: activity.mandatory
+        mandatory: activity.mandatory,
     })
     .then(newActivity => {
         if(activity.requirements != null) {
@@ -65,6 +68,7 @@ exports.update = (req, res, next) => {
         activity.categoryId = newActivity.category? newActivity.category : activity.categoryId;
         activity.activityTypeId = newActivity.activityType? newActivity.activityType : activity.activityTypeId;
         activity.eventId = newActivity.event? newActivity.event : activity.eventId;
+        activity.stageId = newActivity.stage? newActivity.stage : activity.stageId;
         activity.mandatory = newActivity.mandatory? newActivity.mandatory : activity.mandatory;
         return activity.save()
     })

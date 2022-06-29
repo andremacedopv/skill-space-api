@@ -12,6 +12,7 @@ const ActivityType = require('../models/activityType')
 const Post = require('../models/post')
 const Tag = require('../models/tag')
 const PostTag = require('../models/postTag')
+const Stage = require('../models/stage')
 
 const associateModels = (req, res, next) => {
 
@@ -19,7 +20,7 @@ const associateModels = (req, res, next) => {
   Event.belongsToMany(InvitedSpeaker, { through: InvitedSpeakerEvent });
   InvitedSpeaker.belongsToMany(Event, { through: InvitedSpeakerEvent });
 
-  // NX1 Relation between Address and User
+  // 1X1 Relation between Address and User
   Address.hasOne(User, {
     foreignKey: 'addressId',
     onDelete: 'SET NULL',
@@ -90,6 +91,10 @@ const associateModels = (req, res, next) => {
   // NXM Relation between Post and Tag
   Post.belongsToMany(Tag, {through: PostTag})
   Tag.belongsToMany(Post, {through: PostTag})
+
+  // NX1 Relation between Activiy and Stage
+  Activity.belongsTo(Stage)
+  Stage.hasMany(Activity);
 
   next()
 }
