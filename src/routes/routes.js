@@ -83,7 +83,7 @@ router.delete('/post/delete/:id', postsController.delete);
 
 router.get('/stage', stagesController.index);
 router.get('/stage/:id', stagesController.show);
-router.post('/stage/create', isAuth, stagesController.create);
+router.post('/stage/create', stagesController.create);
 router.put('/stage/update/:id', stagesController.update);
 router.delete('/stage/delete/:id', stagesController.delete);
 

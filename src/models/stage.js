@@ -10,14 +10,15 @@ const Post = db.define('stages', {
   },
   name: {
     type: sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   description: {
     type: sequelize.TEXT,
     allowNull: false
   },
-  timeRequirement: {
-    type: sequelize.TIME
+  hoursRequirement: {
+    type: sequelize.INTEGER,
   },
 })
 

@@ -11,14 +11,15 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       description: {
         type: Sequelize.TEXT,
         allowNull: false
       },
-      timeRequirement: {
-        type: Sequelize.TIME
+      hoursRequirement: {
+        type: Sequelize.INTEGER,
       },
       updatedAt: Sequelize.DATE,
       createdAt: Sequelize.DATE

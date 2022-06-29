@@ -18,7 +18,7 @@ exports.create = (req, res, next) => {
     Stage.create({
         name: stage.name,
         description: stage.description,
-        timeRequirement: stage.timeRequirement,
+        hoursRequirement: stage.hoursRequirement,
     })
     .then(newStage => {
         res.json({ stage: newStage.dataValues });
@@ -36,7 +36,7 @@ exports.update = (req, res, next) => {
         if(!stage) throw new Error("Estágio não encontrado")
         stage.name = updatedStage.name? updatedStage.name : stage.name;
         stage.description = updatedStage.description? updatedStage.description : stage.description;
-        stage.timeRequirement = updatedStage.timeRequirement? updatedStage.timeRequirement : stage.timeRequirement;
+        stage.hoursRequirement = updatedStage.hoursRequirement? updatedStage.hoursRequirement : stage.hoursRequirement;
         return stage.save()
     })
     .then(response => {
