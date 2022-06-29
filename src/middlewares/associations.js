@@ -128,6 +128,24 @@ const associateModels = (req, res, next) => {
     otherKey: 'userId'
   })
 
+  // 1XN Realation between User and reaction
+  User.hasMany(Reaction, {
+    as: { singular: 'act', plural: 'acts' },
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  Reaction.belongsTo(User);
+
+  // 1XN Realation between Post and reaction
+  Post.hasMany(Reaction, {
+    as: { singular: 'reacted', plural: 'reacteds' },
+    foreignKey: 'postId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  Reaction.belongsTo(Post);
+
   next()
 }
 

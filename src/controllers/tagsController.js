@@ -75,6 +75,8 @@ exports.delete = (req, res, next) => {
 
 exports.follow = async (req, res, next) => {
     try{
+        const count = Tag.count({ where: { id: req.params.id } })
+        if (count == 0) throw new Error("Tag não encontrada")
         await TagUser.create({
             userId: req.user.id,
             tagId: req.params.id
