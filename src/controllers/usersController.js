@@ -7,6 +7,7 @@ const { validationResult } = require('express-validator/check')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const StageUser = require('../models/stageUser');
+const { requirements } = require('./activitiesController');
 
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
@@ -262,7 +263,21 @@ exports.addStage = async (req, res, next) => {
             const error = new Error('The user already have this stage');
             throw error;
         }
-        console.log("--------------------------")
+
+        const stage = await Stage.findByPk(stageId, { include: 
+            [
+                {model: Stage, as: 'requirements'},
+            ]}
+        )
+        
+        let error = false
+        for (const requirement of stage.requirements) {
+            const checkStageUser = await StageUser.findOne({where: {userId: userId, stageId: requirement.id}})
+            if(!checkStageUser) error = true
+        }
+
+        if(error) throw new Error('The user does not have the required stages');
+
         await StageUser.create({stageId: stageId, userId: userId})
         res.json({message: "Stage added to User"})
     }
@@ -281,7 +296,8 @@ exports.removeStage = async (req, res, next) => {
             const error = new Error('The user does not have this stage');
             throw error;
         }
-        stageUser.destroy()
+        await stageUser.destroy()
+        
         res.json({message: "Stage removed from User"})
     }
     catch(err) {
