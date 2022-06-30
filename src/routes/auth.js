@@ -38,5 +38,7 @@ router.patch('/user/promote/:id', isAuth, isOwner, usersController.promote)
 router.patch('/user/demote/:id', isAuth, isOwner, usersController.demote)
 router.patch('/user/activate/:id', isAuth, isAdmin, usersController.activate)
 router.patch('/user/deactivate/:id', isAuth, isAdmin, usersController.deactivate)
+router.patch('/user/stages/add', usersController.addStage)
+router.patch('/user/stages/remove', isAuth, isAdmin, usersController.removeStage)
 
 module.exports = router;

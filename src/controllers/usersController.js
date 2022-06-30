@@ -2,9 +2,11 @@
 const User = require('../models/user');
 const Address = require('../models/address')
 const Guest = require('../models/guest')
+const Stage = require('../models/stage')
 const { validationResult } = require('express-validator/check')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const StageUser = require('../models/stageUser');
 
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
@@ -162,7 +164,9 @@ exports.show = (req, res, next) => {
 }
 
 exports.index = (req, res, next) => {
-    User.scope('withoutPassword').findAll()
+    User.scope('withoutPassword').findAll({include: [
+        {model: Stage, as: 'stages', attributes: ['id', 'name']},
+    ]})
     .then(users => {
       res.json({ users: users });
     })
@@ -246,4 +250,41 @@ exports.invitations = (req, res, next) => {
       console.log(err)
       res.status(422).json({error: err})
     })
+}
+
+exports.addStage = async (req, res, next) => {
+    const userId = req.body.user
+    const stageId = req.body.stage
+
+    try {
+        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
+        if (stageUser) {
+            const error = new Error('The user already have this stage');
+            throw error;
+        }
+        console.log("--------------------------")
+        await StageUser.create({stageId: stageId, userId: userId})
+        res.json({message: "Stage added to User"})
+    }
+    catch(err) {
+        res.status(422).json({error: err.toString()})
+    }
+}
+
+exports.removeStage = async (req, res, next) => {
+    const userId = req.body.user
+    const stageId = req.body.stage
+
+    try {
+        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
+        if (!stageUser) {
+            const error = new Error('The user does not have this stage');
+            throw error;
+        }
+        stageUser.destroy()
+        res.json({message: "Stage removed from User"})
+    }
+    catch(err) {
+        res.status(422).json({error: err.toString()})
+    }
 }

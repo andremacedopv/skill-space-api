@@ -13,6 +13,7 @@ const Post = require('../models/post')
 const Tag = require('../models/tag')
 const PostTag = require('../models/postTag')
 const Stage = require('../models/stage')
+const StageUser = require('../models/stageUser')
 
 const associateModels = (req, res, next) => {
 
@@ -96,6 +97,7 @@ const associateModels = (req, res, next) => {
   Activity.belongsTo(Stage)
   Stage.hasMany(Activity);
 
+  // NXN Relation between Stage and Stage
   Stage.belongsToMany(Stage, {
     through: 'stageRequirements',
     as: { singular: 'requirement', plural: 'requirements' },
@@ -108,6 +110,10 @@ const associateModels = (req, res, next) => {
     foreignKey: 'requirementId',
     otherKey: 'stageId'
   })
+
+  // NXM Relation between Stage and User
+  User.belongsToMany(Stage, {through: StageUser})
+  Stage.belongsToMany(User, {through: StageUser})
 
   next()
 }
