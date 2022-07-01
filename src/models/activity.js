@@ -32,6 +32,11 @@ const Activity = db.define('activity', {
     references: { model: 'events', key: 'id' },
     onDelete: 'SET NULL',
   },
+  stageId: {
+    type: sequelize.INTEGER,
+    references: { model: 'stages', key: 'id' },
+    onDelete: 'SET NULL',
+  },
   mandatory: {
     type: sequelize.BOOLEAN,
     allowNull: false,

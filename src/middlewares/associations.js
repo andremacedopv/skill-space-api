@@ -12,6 +12,8 @@ const ActivityType = require('../models/activityType')
 const Post = require('../models/post')
 const Tag = require('../models/tag')
 const PostTag = require('../models/postTag')
+const Stage = require('../models/stage')
+const StageUser = require('../models/stageUser')
 const Reaction = require('../models/reaction')
 
 const associateModels = (req, res, next) => {
@@ -95,6 +97,28 @@ const associateModels = (req, res, next) => {
   // NXM Relation between Post and Tag
   Post.belongsToMany(Tag, {through: PostTag})
   Tag.belongsToMany(Post, {through: PostTag})
+
+  // NX1 Relation between Activiy and Stage
+  Activity.belongsTo(Stage)
+  Stage.hasMany(Activity);
+
+  // NXN Relation between Stage and Stage
+  Stage.belongsToMany(Stage, {
+    through: 'stageRequirements',
+    as: { singular: 'requirement', plural: 'requirements' },
+    foreignKey: 'stageId',
+    otherKey: 'requirementId'
+  })
+  Stage.belongsToMany(Stage, {
+    through: 'stageRequirements',
+    as: { singular: 'dependent', plural: 'dependents' },
+    foreignKey: 'requirementId',
+    otherKey: 'stageId'
+  })
+
+  // NXM Relation between Stage and User
+  User.belongsToMany(Stage, {through: StageUser})
+  Stage.belongsToMany(User, {through: StageUser})
 
   // NXM Relation between Users (Followers)
   User.belongsToMany(User, {

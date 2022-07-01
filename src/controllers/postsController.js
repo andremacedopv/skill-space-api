@@ -33,23 +33,25 @@ exports.create = async (req, res, next) => {
     }
 }
 
-exports.update = (req, res, next) => {
+exports.update = async (req, res, next) => {
     const updatedPost = req.body;
-    Post.findByPk(req.params.id)
-    .then(post => {
+
+    try {
+        const post = await Post.findByPk(req.params.id)
         if(!post) throw new Error("Post não encontrado")
         post.name = updatedPost.name? updatedPost.name : post.name;
         post.description = updatedPost.description? updatedPost.description : post.description;
-        post.tags && post.setTags(updatedPost.tags)
-        return post.save()
-    })
-    .then(response => {
-        res.json({ post: response.dataValues });
-    })
-    .catch(e => {
+        if(updatedStage.requirements) {
+            await post.removeTags()
+            await post.setTags(updatedPost.tags)
+        }
+        await post.save()
+        res.json({ post: post.dataValues });
+    }
+    catch(e) {
         console.log(e)      
         res.status(422).json({ error: e.toString() })
-    }) 
+    }
 }
 
 exports.show = (req, res, next) => {
