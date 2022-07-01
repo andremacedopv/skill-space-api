@@ -11,6 +11,8 @@ const activitiesController = require('../controllers/activitiesController')
 const guestsController = require('../controllers/guestsController')
 const tagsController = require('../controllers/tagsController')
 const postsController = require('../controllers/postsController')
+const reactionsController = require('../controllers/reactionsController')
+const followersController = require('../controllers/followersController')
 
 const isAuth = require('../middlewares/is-auth')
 
@@ -68,10 +70,14 @@ router.get('/activity/dependents/add/:id', activitiesController.addDependents);
 router.get('/activity/dependents/:id', activitiesController.dependents);
 
 router.get('/tag', tagsController.index);
-router.get('/tag/:id', tagsController.show);
 router.post('/tag/create', tagsController.create);
 router.put('/tag/update/:id', tagsController.update);
 router.delete('/tag/delete/:id', tagsController.delete);
+router.post('/tag/follow/:id', isAuth, tagsController.follow);
+router.post('/tag/follow/toggle/:id', isAuth, tagsController.toggleFollow);
+router.delete('/tag/unfollow/:id', isAuth, tagsController.unfollow);
+router.get('/tag/followed', isAuth, tagsController.followedTags);
+router.get('/tag/:id', tagsController.show);
 
 router.get('/post', postsController.index);
 router.get('/post/:id', postsController.show);
@@ -79,5 +85,17 @@ router.get('/post/:id/comments', postsController.comments);
 router.post('/post/create', isAuth, postsController.create);
 router.put('/post/update/:id', postsController.update);
 router.delete('/post/delete/:id', postsController.delete);
+
+router.post('/follow/:id', isAuth, followersController.follow);
+router.get('/followers/:id', followersController.followers);
+router.get('/followers/count/:id', followersController.followerCount);
+router.get('/following/count/:id', followersController.followingCount);
+router.get('/following/:id', followersController.following);
+
+router.post('/post/reaction/create/:id', isAuth, reactionsController.react);
+router.delete('/post/reaction/delete/:id', isAuth, reactionsController.removeReaction);
+router.get('/post/reaction/count/:id', reactionsController.reactionCount);
+router.get('/post/reaction/user', isAuth, reactionsController.userReactions);
+router.get('/post/reaction/:id', reactionsController.postReactions);
 
 module.exports = router;

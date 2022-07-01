@@ -13,6 +13,12 @@ const Tag = db.define('tags', {
     allowNull: false,
     unique: true
   }
+}, {
+  scopes: {
+      noTime: {
+          attributes: { exclude: ['createdAt', 'updatedAt'] }
+      }
+  }  
 })
 
 module.exports = Tag
