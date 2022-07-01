@@ -7,13 +7,14 @@ const Guest = require('../models/guest')
 const EventFeedback = require('../models/eventFeedback')
 const Activity = require('../models/activity')
 const Category = require('../models/category')
-const ActivityRequirement = require('../models/activityRequirement')
+const TagUser = require('../models/tagUser')
 const ActivityType = require('../models/activityType')
 const Post = require('../models/post')
 const Tag = require('../models/tag')
 const PostTag = require('../models/postTag')
 const Stage = require('../models/stage')
 const StageUser = require('../models/stageUser')
+const Reaction = require('../models/reaction')
 
 const associateModels = (req, res, next) => {
 
@@ -48,6 +49,7 @@ const associateModels = (req, res, next) => {
   EventFeedback.belongsTo(Event)
   Event.hasMany(EventFeedback)
 
+  // NXM Relation between Activities
   Activity.belongsToMany(Activity, {
     through: 'activityRequirements',
     as: { singular: 'requirement', plural: 'requirements' },
@@ -61,6 +63,7 @@ const associateModels = (req, res, next) => {
     otherKey: 'activityId'
   })
 
+  // NX1 Relation between Category and Activities
   Category.hasMany(Activity, {
     foreignKey: 'categoryId',
     onDelete: 'SET NULL',
@@ -68,6 +71,7 @@ const associateModels = (req, res, next) => {
   })
   Activity.belongsTo(Category);
 
+  // NX1 Relation between Event and Activities
   Event.hasMany(Activity, {
     foreignKey: 'eventId',
     onDelete: 'SET NULL',
@@ -75,6 +79,7 @@ const associateModels = (req, res, next) => {
   })
   Activity.belongsTo(Event);
 
+  // NX1 Relation between Activity Type and Activities
   ActivityType.hasMany(Activity, {
     foreignKey: 'activityTypeId',
     onDelete: 'SET NULL',
@@ -114,6 +119,56 @@ const associateModels = (req, res, next) => {
   // NXM Relation between Stage and User
   User.belongsToMany(Stage, {through: StageUser})
   Stage.belongsToMany(User, {through: StageUser})
+
+  // NXM Relation between Users (Followers)
+  User.belongsToMany(User, {
+    through: 'followers',
+    as: { singular: 'follow', plural: 'follows' },
+    foreignKey: 'followerId',
+    otherKey: 'followingId'
+  })
+  User.belongsToMany(User, {
+    through: 'followers',
+    as: { singular: 'following', plural: 'followings' },
+    foreignKey: 'followingId',
+    otherKey: 'followerId'
+  })
+
+  // NXM Relation between User and Tag
+  User.belongsToMany(Tag, { through: TagUser });
+  Tag.belongsToMany(User, { through: TagUser });
+
+  // NXM Relation between User and Post (Reaction)
+  User.belongsToMany(Post, {
+    through: 'reactions',
+    as: { singular: 'react', plural: 'reacts' },
+    foreignKey: 'userId',
+    otherKey: 'postId'
+  })
+  Post.belongsToMany(User, {
+    through: 'reactions',
+    as: { singular: 'reactor', plural: 'reactors' },
+    foreignKey: 'postId',
+    otherKey: 'userId'
+  })
+
+  // 1XN Realation between User and reaction
+  User.hasMany(Reaction, {
+    as: { singular: 'act', plural: 'acts' },
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  Reaction.belongsTo(User);
+
+  // 1XN Realation between Post and reaction
+  Post.hasMany(Reaction, {
+    as: { singular: 'reacted', plural: 'reacteds' },
+    foreignKey: 'postId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  Reaction.belongsTo(Post);
 
   next()
 }

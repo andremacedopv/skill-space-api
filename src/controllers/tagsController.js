@@ -1,5 +1,7 @@
 // Imports
 const Tag = require('../models/tag');
+const TagUser = require('../models/tagUser');
+const User = require('../models/user')
 
 // Methods
 exports.index = (req, res, next) => {
@@ -68,5 +70,85 @@ exports.delete = (req, res, next) => {
     .catch(e => {
         console.log(e)
         res.status(422).json({ error: e.toString() })
+    }) 
+}
+
+exports.follow = async (req, res, next) => {
+    try{
+        const count = Tag.count({ where: { id: req.params.id } })
+        if (count == 0) throw new Error("Tag não encontrada")
+        await TagUser.create({
+            userId: req.user.id,
+            tagId: req.params.id
+        })
+        res.json({ message: "Tag seguida com sucesso" });
+    }
+    catch(e){
+        console.log(e)
+        res.status(422).json({ error: e.toString() })
+    }
+}
+exports.toggleFollow = async (req, res, next) => {
+    try{
+        const count = Tag.count({ where: { id: req.params.id } })
+        if (count == 0) throw new Error("Tag não encontrada")
+        const tagUser = await TagUser.findOne({
+            where: {
+                tagId: req.params.id,
+                userId: req.user.id
+            }
+        })
+        if(!tagUser) {
+            await TagUser.create({
+                userId: req.user.id,
+                tagId: req.params.id
+            })
+            res.json({ message: "Tag seguida com sucesso" });
+        } else {
+            tagUser.destroy()
+            res.json({ message: "Tag não mais seguida" })
+        }
+    }
+    catch(e){
+        console.log(e)
+        res.status(422).json({ error: e.toString() })
+    }
+}
+
+exports.unfollow = (req, res, next) => {
+    TagUser.findOne({
+        where: {
+            tagId: req.params.id,
+            userId: req.user.id
+        }
+    })
+    .then(tagUser => {
+        if(!tagUser) Error("Tag não seguida")
+        tagUser.destroy()
+        res.json({ message: "Operação realizada com sucesso" })
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }) 
+}
+
+exports.followedTags = (req, res, next) => {
+    Tag.scope('noTime').findAll({
+        include: [{
+            model: User,
+            where: {
+                id: req.user.id
+            },
+            attributes: [],
+            required: true
+        }]
+    })
+    .then(t => {
+        res.json({ tags: t })
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
     }) 
 }
