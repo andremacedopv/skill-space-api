@@ -26,6 +26,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 'chats', key: 'id' },
         onDelete: 'CASCADE',
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       }
     });
   },
