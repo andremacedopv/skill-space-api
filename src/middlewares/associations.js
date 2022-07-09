@@ -15,6 +15,7 @@ const PostTag = require('../models/postTag')
 const Stage = require('../models/stage')
 const StageUser = require('../models/stageUser')
 const Reaction = require('../models/reaction')
+const Message = require('../models/message')
 
 const associateModels = (req, res, next) => {
 
@@ -152,7 +153,7 @@ const associateModels = (req, res, next) => {
     otherKey: 'userId'
   })
 
-  // 1XN Realation between User and reaction
+  // 1XN Relation between User and reaction
   User.hasMany(Reaction, {
     as: { singular: 'act', plural: 'acts' },
     foreignKey: 'userId',
@@ -169,6 +170,14 @@ const associateModels = (req, res, next) => {
     onUpdate: 'CASCADE'
   })
   Reaction.belongsTo(Post);
+
+  // 1XN Relation between User and Message
+  User.hasMany(Message, {
+    foreignKey: 'userId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  Message.belongsTo(User);
 
   next()
 }
