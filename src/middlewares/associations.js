@@ -16,6 +16,8 @@ const Stage = require('../models/stage')
 const StageUser = require('../models/stageUser')
 const Reaction = require('../models/reaction')
 const Message = require('../models/message')
+const Chat = require('../models/chat')
+const ChatUser = require('../models/chatUser')
 
 const associateModels = (req, res, next) => {
 
@@ -178,6 +180,18 @@ const associateModels = (req, res, next) => {
     onUpdate: 'CASCADE'
   })
   Message.belongsTo(User);
+
+  // 1XN Relation between Chat and Message
+  Chat.hasMany(Message, {
+    foreignKey: 'chatId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  Message.belongsTo(Chat);
+
+  // NXM Relation between Chat and User
+  Chat.belongsToMany(User, { through: ChatUser });
+  User.belongsToMany(Chat, { through: ChatUser });
 
   next()
 }

@@ -4,7 +4,13 @@ const Message = require('../models/message');
 // Methods
 
 exports.newMessage = (req, res, next) => {
+
     const message = req.body;
+
+    // Chega se existe um chat com todos os remetentes + o user q esta enviando
+    // Se existir o tal chat, crie a mensagem e atrele a mensagem a este chat
+    // Senão existir, crie o chat, crie os ChatUser e atrele a mensagem ao novo chat
+
     Message.create({
         description: message.description,
         date: Date.now(),

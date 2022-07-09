@@ -22,6 +22,11 @@ const Message = db.define('message', {
     type: sequelize.INTEGER,
     references: { model: 'users', key: 'id' },
     onDelete: 'CASCADE',
+  },
+  chatId: {
+    type: Sequelize.INTEGER,
+    references: { model: 'chats', key: 'id' },
+    onDelete: 'CASCADE',
   }
 });
 
