@@ -4,21 +4,7 @@ const Chat =  require('../models/chat')
 
 // Methods
 
-exports.show = (req, res, next) => {
-}
-
-exports.index = async (req, res, next) => {
-    try {
-        const chats = Chat.findAll()
-        res.json({ chats: chats });
-    }
-    catch (e) {
-        console.log(e)
-        res.status(500).json({ error: e.toString() })
-    }
-}
-
-exports.newMessage = (req, res, next) => {
+exports.create = (req, res, next) => {
 
     const message = req.body;
 
@@ -40,7 +26,10 @@ exports.newMessage = (req, res, next) => {
     }) 
 }
 
-exports.deleteMessage = (req, res, next) => {
+exports.update = (req, res, next) => {
+}
+
+exports.delete = (req, res, next) => {
     Message.findByPk(req.params.id)
     .then(message => {
         if(!message) throw new Error("Mensagem não encontrada")
