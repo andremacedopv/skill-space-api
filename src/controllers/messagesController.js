@@ -11,7 +11,6 @@ const { Op } = require("sequelize");
 exports.create = async (req, res, next) => {
 
     try {
-        
         let users = req.body.users
         const message = req.body;
         
@@ -26,7 +25,7 @@ exports.create = async (req, res, next) => {
                 as: 'users',
                 attributes: ['id'],
                 where: {
-                    id: {[Op.or]: req.body.users}
+                    id: {[Op.or]: users}
                 },
                 required: true
             }]
@@ -35,24 +34,24 @@ exports.create = async (req, res, next) => {
         // Filtrando para pegar apenas o chat q possuem ao mesmo tempo todo os n usuários participantes
         let chat
         chats.forEach(c => {
-            if(c.users.length === users.length ) chat = c
+            if(c.users.length === users.length ) {
+                chat = c
+            }
         });
 
+        // Criando um novo chat caso nunca essa seja a primeira mensagem da conversa
         if(!chat) {
             chat = await Chat.create()
-            await chat.setUsers(req.body.users)
+            await chat.setUsers(users)
         }
         
-        res.json({ chat: chat });
-        
-        // res.json({ chat: chat });
-        // const newMessage = Message.create({
-        //     description: message.description,
-        //     date: Date.now(),
-        //     userId: req.user.id,
-        //     chatId: chat.id
-        // })
-        // res.json({ message: newMessage.dataValues });
+        const newMessage = await Message.create({
+            description: message.description,
+            date: Date.now(),
+            userId: req.user.id,
+            chatId: chat.id
+        })
+        res.json({ message: newMessage.dataValues });
     }
     catch(e){
         console.log(e)
@@ -61,6 +60,20 @@ exports.create = async (req, res, next) => {
 }
 
 exports.update = (req, res, next) => {
+    const newMessage = req.body;
+    Message.findByPk(req.params.id)
+    .then(message => {
+        if(!message) throw new Error("Mensagem não encontrada")
+        message.description = newMessage.description
+        return category.save()
+    })
+    .then(response => {
+        res.json({ message: response.dataValues });
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }) 
 }
 
 exports.delete = (req, res, next) => {
