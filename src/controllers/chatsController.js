@@ -31,13 +31,26 @@ exports.index = async (req, res, next) => {
 
 exports.myChats = async (req, res, next) => {
     try {
-        const chats = await Chat.findAll({include: [{
-            model: User.scope('minimal'),
-            where: {
-                id: req.user.id
-            },
-        }]})
-        res.json({ chats: chats });
+        const chats = await Chat.findAll({
+            include: [{
+                model: User.scope('minimal'),
+                where: {
+                    id: req.user.id
+                }
+            }],
+        })
+
+        const chatIds = chats.map(chat => {
+            return chat.id
+        });
+
+        const userChats = await Chat.findAll({
+            include: [{
+                model: User.scope('minimal'),
+            }],
+            where: {id: chatIds}
+        })
+        res.json({ chats: userChats });
     }
     
     catch (e) {
