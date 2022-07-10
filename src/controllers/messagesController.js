@@ -10,27 +10,41 @@ const { Op } = require("sequelize");
 
 exports.create = async (req, res, next) => {
 
-    
     try {
+        
+        let users = req.body.users
         const message = req.body;
         
-        let chat = await Chat.findAll({include: [{
-            model: User,
-            as: 'users',
-            attributes: ['id'],
-            where: {
-                id: {[Op.or]: req.body.users}
-            },
-            required: true
-        }]})
+        // Garantindo que o usuário logado está no array de usuários
+        users = users.filter(function(e) { return e !== req.user.id })
+        users.push(req.user.id)
+        
+        // Buscando todos os chats que incluam os usuários enviados
+        const chats = await Chat.findAll({
+            include: [{
+                model: User,
+                as: 'users',
+                attributes: ['id'],
+                where: {
+                    id: {[Op.or]: req.body.users}
+                },
+                required: true
+            }]
+        })
 
+        // Filtrando para pegar apenas o chat q possuem ao mesmo tempo todo os n usuários participantes
+        let chat
+        chats.forEach(c => {
+            if(c.users.length === users.length ) chat = c
+        });
+
+        if(!chat) {
+            chat = await Chat.create()
+            await chat.setUsers(req.body.users)
+        }
+        
         res.json({ chat: chat });
-    
-        // if(!chat) {
-        //     chat = await Chat.create()
-        //     await chat.setUsers(req.body.users)
-        // }
-    
+        
         // res.json({ chat: chat });
         // const newMessage = Message.create({
         //     description: message.description,
