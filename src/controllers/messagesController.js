@@ -1,36 +1,49 @@
 // Imports
 const Message = require('../models/message');
 const Chat =  require('../models/chat')
+const User = require('../models/user');
+const ChatUser = require('../models/chatUser');
+
+const { Op } = require("sequelize");
 
 // Methods
 
 exports.create = async (req, res, next) => {
 
-    const message = req.body;
-
-    // Checa se existe um chat com todos os remetentes + o user q esta enviando
     
-    const chat = await Chat.create()
-    await chat.setUsers([1,2])
-    res.json({ chat: chat });
+    try {
+        const message = req.body;
+        
+        let chat = await Chat.findAll({include: [{
+            model: User,
+            as: 'users',
+            attributes: ['id'],
+            where: {
+                id: {[Op.or]: req.body.users}
+            },
+            required: true
+        }]})
 
-    // console.log("ka")
-
-    // Se existir o tal chat, crie a mensagem e atrele a mensagem a este chat
-    // Senão existir, crie o chat, crie os ChatUser e atrele a mensagem ao novo chat
-
-    // try {
-    //     const newMessage = Message.create({
-    //         description: message.description,
-    //         date: Date.now(),
-    //         userId: req.user.id
-    //     })
-    //     res.json({ message: newMessage.dataValues });
-    // }
-    // catch(e){
-    //     console.log(e)
-    //     res.status(422).json({ error: e.toString() })
-    // }
+        res.json({ chat: chat });
+    
+        // if(!chat) {
+        //     chat = await Chat.create()
+        //     await chat.setUsers(req.body.users)
+        // }
+    
+        // res.json({ chat: chat });
+        // const newMessage = Message.create({
+        //     description: message.description,
+        //     date: Date.now(),
+        //     userId: req.user.id,
+        //     chatId: chat.id
+        // })
+        // res.json({ message: newMessage.dataValues });
+    }
+    catch(e){
+        console.log(e)
+        res.status(422).json({ error: e.toString() })
+    }
 }
 
 exports.update = (req, res, next) => {

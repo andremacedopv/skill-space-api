@@ -20,8 +20,26 @@ exports.show = (req, res, next) => {
 exports.index = async (req, res, next) => {
     try {
         const chats = await Chat.findAll( {include: User.scope('minimal')} )
+        console.log(chats)
         res.json({ chats: chats });
     }
+    catch (e) {
+        console.log(e)
+        res.status(500).json({ error: e.toString() })
+    }
+}
+
+exports.myChats = async (req, res, next) => {
+    try {
+        const chats = await Chat.findAll({include: [{
+            model: User.scope('minimal'),
+            where: {
+                id: req.user.id
+            },
+        }]})
+        res.json({ chats: chats });
+    }
+    
     catch (e) {
         console.log(e)
         res.status(500).json({ error: e.toString() })

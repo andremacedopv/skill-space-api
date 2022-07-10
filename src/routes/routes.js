@@ -108,6 +108,7 @@ router.get('/post/reaction/user', isAuth, reactionsController.userReactions);
 router.get('/post/reaction/:id', reactionsController.postReactions);
 
 router.get('/chat', chatsController.index)
+router.get('/chat/my', isAuth, chatsController.myChats)
 router.get('/chat/:id', chatsController.show)
 
 router.post('/message/create', isAuth, messagesController.create)
