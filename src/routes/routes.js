@@ -14,8 +14,10 @@ const postsController = require('../controllers/postsController')
 const stagesController = require('../controllers/stagesController')
 const reactionsController = require('../controllers/reactionsController')
 const followersController = require('../controllers/followersController')
+const activityUsersController = require('../controllers/activityUsersController')
 
 const isAuth = require('../middlewares/is-auth')
+const isAdmin = require('../middlewares/is-admin')
 
 router.get('/', (req, res, next) => {
     res.json({ message: 'Hello World' });
@@ -60,8 +62,18 @@ router.post('/activity/category/create', categoriesController.create);
 router.put('/activity/category/update/:id', categoriesController.update);
 router.delete('/activity/category/delete/:id', categoriesController.delete);
 
+router.post('/activity/start/:id', isAuth, activityUsersController.start);
+router.post('/activity/finish/:id', isAuth, activityUsersController.finish);
+router.put('/activity/submission/edit/:id', isAuth, activityUsersController.editSubmission);
+router.get('/activity/manager/submission/:act_id/:user_id', isAuth, isAdmin, activityUsersController.userSubmission);
+router.get('/activity/manager/submissions', isAuth, isAdmin, activityUsersController.indexSubmissions);
+router.get('/activity/manager/feedback/pending', isAuth, isAdmin, activityUsersController.pendingFeedbacks);
+router.post('/activity/manager/feedback/:act_id/:user_id', isAuth, isAdmin, activityUsersController.giveFeedback);
+router.put('/activity/manager/feedback/edit/:act_id/:user_id', isAuth, isAdmin, activityUsersController.editFeedback);
+router.get('/activity/submission/:id', isAuth, activityUsersController.mySubmission);
+router.get('/activity/user', isAuth, activityUsersController.userIndex);
+
 router.get('/activity', activitiesController.index);
-router.get('/activity/:id', activitiesController.show);
 router.post('/activity/create', activitiesController.create);
 router.put('/activity/update/:id', activitiesController.update);
 router.delete('/activity/delete/:id', activitiesController.delete);
@@ -69,6 +81,7 @@ router.post('/activity/requirements/add/:id', activitiesController.addRequiremen
 router.get('/activity/requirements/:id', activitiesController.requirements);
 router.get('/activity/dependents/add/:id', activitiesController.addDependents);
 router.get('/activity/dependents/:id', activitiesController.dependents);
+router.get('/activity/:id', activitiesController.show);
 
 router.get('/tag', tagsController.index);
 router.post('/tag/create', tagsController.create);
