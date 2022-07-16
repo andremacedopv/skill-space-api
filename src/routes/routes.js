@@ -14,6 +14,8 @@ const postsController = require('../controllers/postsController')
 const stagesController = require('../controllers/stagesController')
 const reactionsController = require('../controllers/reactionsController')
 const followersController = require('../controllers/followersController')
+const chatsController = require('../controllers/chatsController')
+const messagesController = require('../controllers/messagesController')
 
 const isAuth = require('../middlewares/is-auth')
 
@@ -104,5 +106,13 @@ router.delete('/post/reaction/delete/:id', isAuth, reactionsController.removeRea
 router.get('/post/reaction/count/:id', reactionsController.reactionCount);
 router.get('/post/reaction/user', isAuth, reactionsController.userReactions);
 router.get('/post/reaction/:id', reactionsController.postReactions);
+
+router.get('/chat', chatsController.index)
+router.get('/chat/my', isAuth, chatsController.myChats)
+router.get('/chat/:id', chatsController.show)
+
+router.post('/message/create', isAuth, messagesController.create)
+router.put('/message/update/:id', messagesController.update)
+router.delete('/message/delete/:id', messagesController.delete)
 
 module.exports = router;
