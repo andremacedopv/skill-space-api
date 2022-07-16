@@ -15,15 +15,12 @@ const PostTag = require('../models/postTag')
 const Stage = require('../models/stage')
 const StageUser = require('../models/stageUser')
 const Reaction = require('../models/reaction')
-<<<<<<< HEAD
 const ActivityUser = require('../models/activityUser')
 const ActivityFeedback = require('../models/activityFeedback')
 const ActivitySubmission = require('../models/activitySubmission')
-=======
 const Message = require('../models/message')
 const Chat = require('../models/chat')
 const ChatUser = require('../models/chatUser')
->>>>>>> main
 
 const associateModels = (req, res, next) => {
 
