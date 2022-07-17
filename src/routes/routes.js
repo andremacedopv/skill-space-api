@@ -16,8 +16,10 @@ const reactionsController = require('../controllers/reactionsController')
 const followersController = require('../controllers/followersController')
 const chatsController = require('../controllers/chatsController')
 const messagesController = require('../controllers/messagesController')
+const permissionsController = require('../controllers/permissionsController')
 
-const isAuth = require('../middlewares/is-auth')
+const isAuth = require('../middlewares/is-auth');
+const isAdmin = require('../middlewares/is-admin');
 
 router.get('/', (req, res, next) => {
     res.json({ message: 'Hello World' });
@@ -114,5 +116,7 @@ router.get('/chat/:id', chatsController.show)
 router.post('/message/create', isAuth, messagesController.create)
 router.put('/message/update/:id', messagesController.update)
 router.delete('/message/delete/:id', messagesController.delete)
+
+router.get('/permission', isAuth, isAdmin, permissionsController.index)
 
 module.exports = router;
