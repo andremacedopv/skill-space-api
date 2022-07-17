@@ -4,28 +4,35 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     let d = new Date(); 
     let date = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
-    await queryInterface.bulkInsert('permissions', [
-     {
-       name: "crud_stages",
-       description: "Permissão de Ver, Criar, Editar e Deletar Estágios",
-       updatedAt: date, createdAt: date
-     },
-     {
-      name: "show_stages",
-      description: "Permissão de Ver Estágios",
-      updatedAt: date, createdAt: date
-    },
-    {
-      name: "modify_stages",
-      description: "Permissão de Criar e Editar Estágios",
-      updatedAt: date, createdAt: date
-    },
-    {
-      name: "delete_stages",
-      description: "Permissão de Deletar Estágios",
-      updatedAt: date, createdAt: date
-    },
-   ])
+
+    const models = [
+      {name: "stages", text: "Estágios"}, 
+      {name: "activities", text: "Atividades"}, 
+      {name: "events", text: "Eventos"},
+      {name: "category", text: "Categorias"},
+      {name: "invitedSpeaker", text: "Apresentadores Convidados"},
+      {name: "tag", text: "Tags"}
+    ]
+    const permission_types = [
+      {name: "crud", text: "Permissão de Ver, Criar, Editar e Deletar"},
+      {name: "show", text: "Permissão de Ver"},
+      {name: "modify", text: "Permissão de Criar e Editar"},
+      {name: "delete", text: "Permissão de Deletar"},
+    ]
+    
+    const permissions = []
+    
+    models.forEach(model => {
+      permission_types.forEach(permission_type => {
+        permissions.push({
+          name: permission_type.name + "_" + model.name,
+          description: permission_type.text + " " + model.text,
+          createdAt: date, updatedAt: date
+        })
+      })
+    })
+
+    await queryInterface.bulkInsert('permissions', permissions)
   },
 
   async down (queryInterface, Sequelize) {
