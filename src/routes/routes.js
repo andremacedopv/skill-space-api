@@ -20,6 +20,7 @@ const permissionsController = require('../controllers/permissionsController')
 
 const isAuth = require('../middlewares/is-auth');
 const isAdmin = require('../middlewares/is-admin');
+const hasPermission = require('../middlewares/has-permission')
 
 router.get('/', (req, res, next) => {
     res.json({ message: 'Hello World' });
@@ -38,7 +39,7 @@ router.put('/event/:event_id/guest/presence', guestsController.confirmPresence)
 
 router.get('/event/guests/:id', eventsController.invites);
 router.post('/event/invite/:id', eventsController.setInvites);
-router.get('/event', eventsController.index);
+router.get('/event', isAuth, eventsController.index);
 router.post('/event/create', eventsController.create);
 router.put('/event/update/:id', eventsController.update);
 router.delete('/event/delete/:id', eventsController.delete);
