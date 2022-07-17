@@ -9,6 +9,7 @@ const usersController = require('../controllers/usersController')
 const isAuth = require('../middlewares/is-auth')
 const isAdmin = require('../middlewares/is-admin')
 const isOwner = require('../middlewares/is-owner')
+const hasPermission = require('../middlewares/has-permission')
 
 router.post('/signup', [
    body('email')

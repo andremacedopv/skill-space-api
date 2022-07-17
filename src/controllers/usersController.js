@@ -210,7 +210,7 @@ exports.demote = (req, res, next) => {
 
 exports.updatePermissions = async (req, res, next) => {
     const permissions = req.body.permissions
-    const userId = req.params.id
+    const userId = req.params.user
 
     try {
         const user = await User.findByPk(userId)
