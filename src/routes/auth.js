@@ -40,5 +40,7 @@ router.patch('/user/activate/:id', isAuth, isAdmin, usersController.activate)
 router.patch('/user/deactivate/:id', isAuth, isAdmin, usersController.deactivate)
 router.patch('/user/stages/add', usersController.addStage)
 router.patch('/user/stages/remove', isAuth, isAdmin, usersController.removeStage)
+router.patch('/user/stages/start/:id', isAuth, usersController.startStage)
+router.patch('/user/stages/finish/:id', isAuth, usersController.finishStage)
 
 module.exports = router;
