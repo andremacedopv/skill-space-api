@@ -26,7 +26,7 @@ router.get('/', (req, res, next) => {
     res.json({ message: 'Hello World' });
 })
 
-router.get('/address', addressesController.index);
+router.get('/address', isAuth, isAdmin, addressesController.index);
 router.get('/address/:id', addressesController.show);
 router.post('/address/create', addressesController.create);
 router.put('/address/update/:id', addressesController.update);
@@ -40,16 +40,16 @@ router.put('/event/:event_id/guest/presence', guestsController.confirmPresence)
 router.get('/event/guests/:id', eventsController.invites);
 router.post('/event/invite/:id', eventsController.setInvites);
 router.get('/event', isAuth, eventsController.index);
-router.post('/event/create', eventsController.create);
-router.put('/event/update/:id', eventsController.update);
-router.delete('/event/delete/:id', eventsController.delete);
+router.post('/event/create', isAuth, hasPermission("modify_events"), eventsController.create);
+router.put('/event/update/:id', isAuth, hasPermission("modify_events"), eventsController.update);
+router.delete('/event/delete/:id', isAuth, hasPermission("delete_events"), eventsController.delete);
 router.get('/event/:id', eventsController.show);
 router.post('/event/:id/feedback/create', isAuth, eventsController.createFeedback);
 router.get('/event/:id/feedback', eventsController.feedbacks);
 
-router.post('/invited-speaker/create', invitedSpeakersController.create);
-router.put('/invited-speaker/update/:id', invitedSpeakersController.update);
-router.delete('/invited-speaker/delete/:id', invitedSpeakersController.delete);
+router.post('/invited-speaker/create', isAuth, hasPermission("modify_invitedSpeakers"), invitedSpeakersController.create);
+router.put('/invited-speaker/update/:id', isAuth, hasPermission("modify_invitedSpeakers"), invitedSpeakersController.update);
+router.delete('/invited-speaker/delete/:id', isAuth, hasPermission("delete_invitedSpeakers"), invitedSpeakersController.delete);
 router.get('/invited-speaker/:id', invitedSpeakersController.show);
 router.get('/invited-speaker', invitedSpeakersController.index);
 
@@ -61,24 +61,24 @@ router.delete('/activity/types/delete/:id', activityTypesController.delete);
 
 router.get('/activity/category', categoriesController.index);
 router.get('/activity/category/:id', categoriesController.show);
-router.post('/activity/category/create', categoriesController.create);
-router.put('/activity/category/update/:id', categoriesController.update);
-router.delete('/activity/category/delete/:id', categoriesController.delete);
+router.post('/activity/category/create', isAuth, hasPermission("modify_categories"), categoriesController.create);
+router.put('/activity/category/update/:id', isAuth, hasPermission("modify_categories"), categoriesController.update);
+router.delete('/activity/category/delete/:id', isAuth, hasPermission("delete_categories"), categoriesController.delete);
 
 router.get('/activity', activitiesController.index);
 router.get('/activity/:id', activitiesController.show);
-router.post('/activity/create', activitiesController.create);
-router.put('/activity/update/:id', activitiesController.update);
-router.delete('/activity/delete/:id', activitiesController.delete);
-router.post('/activity/requirements/add/:id', activitiesController.addRequirements);
-router.get('/activity/requirements/:id', activitiesController.requirements);
-router.get('/activity/dependents/add/:id', activitiesController.addDependents);
+router.post('/activity/create', isAuth, hasPermission("modify_activities"), activitiesController.create);
+router.put('/activity/update/:id', isAuth, hasPermission("modify_activities"), activitiesController.update);
+router.delete('/activity/delete/:id', isAuth, hasPermission("delete_activities"), activitiesController.delete);
+router.post('/activity/requirements/add/:id', isAuth, hasPermission("modify_activities"), activitiesController.addRequirements);
+router.get('/activity/requirements/:id', isAuth, hasPermission("modify_activities"), activitiesController.requirements);
+router.get('/activity/dependents/add/:id', isAuth, hasPermission("modify_activities"), activitiesController.addDependents);
 router.get('/activity/dependents/:id', activitiesController.dependents);
 
 router.get('/tag', tagsController.index);
-router.post('/tag/create', tagsController.create);
-router.put('/tag/update/:id', tagsController.update);
-router.delete('/tag/delete/:id', tagsController.delete);
+router.post('/tag/create', isAuth, hasPermission("modify_tags"), tagsController.create);
+router.put('/tag/update/:id', isAuth, hasPermission("modify_tags"), tagsController.update);
+router.delete('/tag/delete/:id', isAuth, hasPermission("delete_tags"), tagsController.delete);
 router.post('/tag/follow/:id', isAuth, tagsController.follow);
 router.post('/tag/follow/toggle/:id', isAuth, tagsController.toggleFollow);
 router.delete('/tag/unfollow/:id', isAuth, tagsController.unfollow);
@@ -94,9 +94,9 @@ router.delete('/post/delete/:id', postsController.delete);
 
 router.get('/stage', stagesController.index);
 router.get('/stage/:id', stagesController.show);
-router.post('/stage/create', stagesController.create);
-router.put('/stage/update/:id', stagesController.update);
-router.delete('/stage/delete/:id', stagesController.delete);
+router.post('/stage/create', isAuth, hasPermission("modify_stages"), stagesController.create);
+router.put('/stage/update/:id', isAuth, hasPermission("modify_stages"), stagesController.update);
+router.delete('/stage/delete/:id', isAuth, hasPermission("delete_stages"), stagesController.delete);
 
 router.post('/follow/:id', isAuth, followersController.follow);
 router.get('/followers/:id', followersController.followers);

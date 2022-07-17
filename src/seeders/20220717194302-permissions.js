@@ -9,12 +9,12 @@ module.exports = {
       {name: "stages", text: "Estágios"}, 
       {name: "activities", text: "Atividades"}, 
       {name: "events", text: "Eventos"},
-      {name: "category", text: "Categorias"},
-      {name: "invitedSpeaker", text: "Apresentadores Convidados"},
-      {name: "tag", text: "Tags"}
+      {name: "categories", text: "Categorias"},
+      {name: "invitedSpeakers", text: "Apresentadores Convidados"},
+      {name: "tags", text: "Tags"},
+      {name: "users", text: "Usuários"}
     ]
     const permission_types = [
-      {name: "crud", text: "Permissão de Ver, Criar, Editar e Deletar"},
       {name: "show", text: "Permissão de Ver"},
       {name: "modify", text: "Permissão de Criar e Editar"},
       {name: "delete", text: "Permissão de Deletar"},
