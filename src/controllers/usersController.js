@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const StageUser = require('../models/stageUser');
 const { requirements } = require('./activitiesController');
+const Permission = require('../models/permission');
 
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
@@ -167,6 +168,7 @@ exports.show = (req, res, next) => {
 exports.index = (req, res, next) => {
     User.scope('withoutPassword').findAll({include: [
         {model: Stage, as: 'stages', attributes: ['id', 'name']},
+        {model: Permission, as: 'permissions', attributes: ['id', 'name']},
     ]})
     .then(users => {
       res.json({ users: users });
@@ -204,6 +206,27 @@ exports.demote = (req, res, next) => {
       console.log(err)
       res.status(422).json({error: err})
     })
+}
+
+exports.updatePermissions = async (req, res, next) => {
+    const permissions = req.body.permissions
+    const userId = req.params.id
+
+    try {
+        const user = await User.findByPk(userId)
+        if(!user) throw new Error("Usuário não encontrado")
+        
+        await user.removePermissions()
+        await user.setPermissions(permissions)
+    
+        await user.save()
+    
+        res.json({message: `${user.name} permissions updated`})
+    }
+    catch (e) {
+        console.log(e)
+        res.status(422).json({error: e.toString()})
+    }
 }
 
 // Nas duas funções a seguir, colocar regra para somente o owner poder desativar um admin
