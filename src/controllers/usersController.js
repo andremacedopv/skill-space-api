@@ -278,7 +278,7 @@ exports.addStage = async (req, res, next) => {
 
         if(error) throw new Error('The user does not have the required stages');
 
-        await StageUser.create({stageId: stageId, userId: userId})
+        await StageUser.create({stageId: stageId, userId: userId, dateStarted: Date.now()})
         res.json({message: "Stage added to User"})
     }
     catch(err) {
