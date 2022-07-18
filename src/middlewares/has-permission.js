@@ -16,7 +16,7 @@ module.exports = (permission) => {
       u.permissions.forEach(per => {
         if (per.dataValues.name === permission) hasPermission = true
       });
-      if(!user.admin && !hasPermission) {
+      if(!user.admin && !hasPermission && !user.owner) {
         const error = new Error("Unauthorized")
         error.statusCode = 401;
         next(error);
