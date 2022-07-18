@@ -14,6 +14,7 @@ const postsController = require('../controllers/postsController')
 const stagesController = require('../controllers/stagesController')
 const reactionsController = require('../controllers/reactionsController')
 const followersController = require('../controllers/followersController')
+const activityUsersController = require('../controllers/activityUsersController')
 const chatsController = require('../controllers/chatsController')
 const messagesController = require('../controllers/messagesController')
 const permissionsController = require('../controllers/permissionsController')
@@ -64,6 +65,17 @@ router.get('/activity/category/:id', categoriesController.show);
 router.post('/activity/category/create', isAuth, hasPermission("modify_categories"), categoriesController.create);
 router.put('/activity/category/update/:id', isAuth, hasPermission("modify_categories"), categoriesController.update);
 router.delete('/activity/category/delete/:id', isAuth, hasPermission("delete_categories"), categoriesController.delete);
+
+router.post('/activity/start/:id', isAuth, activityUsersController.start);
+router.post('/activity/finish/:id', isAuth, activityUsersController.finish);
+router.put('/activity/submission/edit/:id', isAuth, activityUsersController.editSubmission);
+router.get('/activity/manager/submission/:act_id/:user_id', isAuth, isAdmin, activityUsersController.userSubmission);
+router.get('/activity/manager/submissions', isAuth, isAdmin, activityUsersController.indexSubmissions);
+router.get('/activity/manager/feedback/pending', isAuth, isAdmin, activityUsersController.pendingFeedbacks);
+router.post('/activity/manager/feedback/:act_id/:user_id', isAuth, isAdmin, activityUsersController.giveFeedback);
+router.put('/activity/manager/feedback/edit/:act_id/:user_id', isAuth, isAdmin, activityUsersController.editFeedback);
+router.get('/activity/submission/:id', isAuth, activityUsersController.mySubmission);
+router.get('/activity/user', isAuth, activityUsersController.userIndex);
 
 router.get('/activity', activitiesController.index);
 router.get('/activity/:id', activitiesController.show);
