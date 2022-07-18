@@ -16,6 +16,13 @@ const StageUser = db.define('stageUser', {
     primaryKey: true,
     allowNull: false,
   },
+  dateStarted: {
+    type: sequelize.DATE,
+    defaultValue: sequelize.DataTypes.NOW
+  },
+  dateCompleted: {
+    type: sequelize.DATE,
+  }
 })
 
 module.exports = StageUser
