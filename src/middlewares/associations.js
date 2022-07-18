@@ -15,6 +15,9 @@ const PostTag = require('../models/postTag')
 const Stage = require('../models/stage')
 const StageUser = require('../models/stageUser')
 const Reaction = require('../models/reaction')
+const ActivityUser = require('../models/activityUser')
+const ActivityFeedback = require('../models/activityFeedback')
+const ActivitySubmission = require('../models/activitySubmission')
 const Message = require('../models/message')
 const Chat = require('../models/chat')
 const ChatUser = require('../models/chatUser')
@@ -173,6 +176,55 @@ const associateModels = (req, res, next) => {
   })
   Reaction.belongsTo(Post);
 
+  // 1XN relationship between ActivityUser and Activity
+  Activity.hasMany(ActivityUser, {
+    foreignKey: 'activityId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  ActivityUser.belongsTo(Activity);
+
+  // 1XN relationship between ActivityUser and User
+  User.hasMany(ActivityUser, {
+    as: { singular: 'owner', plural: 'owners' },
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  ActivityUser.belongsTo(User);
+
+  // 1X1 relationship between ActivityUser and Post
+  Post.hasOne(ActivityUser, {
+    foreignKey: 'postId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  ActivityUser.belongsTo(Post);
+
+  // 1X1 relationship between ActivityUser and ActivitySubmission
+  ActivitySubmission.hasOne(ActivityUser, {
+    foreignKey: 'activitySubmissionId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  ActivityUser.belongsTo(ActivitySubmission);
+
+  // 1X1 relationship between ActivityUser and ActivityFeedback
+  ActivityFeedback.hasOne(ActivityUser, {
+    foreignKey: 'activityFeedbackId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
+  })
+  ActivityUser.belongsTo(ActivityFeedback);
+
+  // NX1 relationship between User and ActivityFeedback
+  User.hasMany(ActivityFeedback, {
+    as: { singular: 'reviewer', plural: 'reviewers' },
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  ActivityFeedback.belongsTo(User);
   // 1XN Relation between User and Message
   User.hasMany(Message, {
     foreignKey: 'userId',
