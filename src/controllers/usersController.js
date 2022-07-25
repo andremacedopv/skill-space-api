@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const StageUser = require('../models/stageUser');
 const { requirements } = require('./activitiesController');
+const Permission = require('../models/permission');
 
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
@@ -167,6 +168,7 @@ exports.show = (req, res, next) => {
 exports.index = (req, res, next) => {
     User.scope('withoutPassword').findAll({include: [
         {model: Stage, as: 'stages', attributes: ['id', 'name']},
+        {model: Permission, as: 'permissions', attributes: ['id', 'name']},
     ]})
     .then(users => {
       res.json({ users: users });
@@ -204,6 +206,27 @@ exports.demote = (req, res, next) => {
       console.log(err)
       res.status(422).json({error: err})
     })
+}
+
+exports.updatePermissions = async (req, res, next) => {
+    const permissions = req.body.permissions
+    const userId = req.params.user
+
+    try {
+        const user = await User.findByPk(userId)
+        if(!user) throw new Error("Usuário não encontrado")
+        
+        await user.removePermissions()
+        await user.setPermissions(permissions)
+    
+        await user.save()
+    
+        res.json({message: `${user.name} permissions updated`})
+    }
+    catch (e) {
+        console.log(e)
+        res.status(422).json({error: e.toString()})
+    }
 }
 
 // Nas duas funções a seguir, colocar regra para somente o owner poder desativar um admin
@@ -253,6 +276,61 @@ exports.invitations = (req, res, next) => {
     })
 }
 
+exports.startStage = async (req, res, next) => {
+    const userId = req.user.id
+    const stageId = req.params.id
+
+    try {
+        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
+        if (stageUser) {
+            const error = new Error('The user already have this stage');
+            throw error;
+        }
+
+        const stage = await Stage.findByPk(stageId, { include: 
+            [
+                {model: Stage, as: 'requirements'},
+            ]}
+        )
+        
+        let error = false
+        for (const requirement of stage.requirements) {
+            const checkStageUser = await StageUser.findOne({where: {userId: userId, stageId: requirement.id}})
+            if(!checkStageUser) error = true
+        }
+
+        if(error) throw new Error('The user does not have the required stages');
+
+        await StageUser.create({stageId: stageId, userId: userId, dateStarted: Date.now()})
+        res.json({message: "Stage added to User"})
+    }
+    catch(err) {
+        res.status(422).json({error: err.toString()})
+    }
+}
+
+exports.finishStage = async (req, res, next) => {
+    const userId = req.user.id
+    const stageId = req.params.id
+
+    try {
+        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
+        if (!stageUser) {
+            const error = new Error('The user does not have this stage');
+            throw error;
+        }
+        
+        stageUser.dateCompleted = Date.now()
+
+        await stageUser.save()
+        
+        res.json({message: "Stage concluded with success"})
+    }
+    catch(err) {
+        res.status(422).json({error: err.toString()})
+    }
+}
+
 exports.addStage = async (req, res, next) => {
     const userId = req.body.user
     const stageId = req.body.stage
@@ -278,7 +356,7 @@ exports.addStage = async (req, res, next) => {
 
         if(error) throw new Error('The user does not have the required stages');
 
-        await StageUser.create({stageId: stageId, userId: userId})
+        await StageUser.create({stageId: stageId, userId: userId, dateStarted: Date.now()})
         res.json({message: "Stage added to User"})
     }
     catch(err) {

@@ -21,6 +21,8 @@ const ActivitySubmission = require('../models/activitySubmission')
 const Message = require('../models/message')
 const Chat = require('../models/chat')
 const ChatUser = require('../models/chatUser')
+const Permission = require('../models/permission')
+const AdminPermission = require('../models/adminPermission')
 
 const associateModels = (req, res, next) => {
 
@@ -244,6 +246,10 @@ const associateModels = (req, res, next) => {
   // NXM Relation between Chat and User
   Chat.belongsToMany(User, { through: ChatUser });
   User.belongsToMany(Chat, { through: ChatUser });
+
+  // NXM Relation between User and Permission
+  Permission.belongsToMany(User, { through: AdminPermission });
+  User.belongsToMany(Permission, { through: AdminPermission });
 
   next()
 }
