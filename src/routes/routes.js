@@ -1,6 +1,8 @@
 const express = require('express')
 
 const router = express.Router();
+const multer = require("multer");
+const multerConfig = require("../config/multer");
 
 const addressesController = require('../controllers/addressesController')
 const eventsController = require('../controllers/eventsController')
@@ -65,7 +67,7 @@ router.put('/activity/category/update/:id', categoriesController.update);
 router.delete('/activity/category/delete/:id', categoriesController.delete);
 
 router.post('/activity/start/:id', isAuth, activityUsersController.start);
-router.post('/activity/finish/:id', isAuth, activityUsersController.finish);
+router.post('/activity/finish/:id', isAuth, multer(multerConfig).single("file"), activityUsersController.finish);
 router.put('/activity/submission/edit/:id', isAuth, activityUsersController.editSubmission);
 router.get('/activity/manager/submission/:act_id/:user_id', isAuth, isAdmin, activityUsersController.userSubmission);
 router.get('/activity/manager/submissions', isAuth, isAdmin, activityUsersController.indexSubmissions);
