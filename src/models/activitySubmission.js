@@ -12,7 +12,10 @@ const ActivitySubmission = db.define('activitySubmission', {
     type: sequelize.TEXT,
     allowNull: false,
   },
-  // TODO: Insert File
+  file: {
+    type: sequelize.STRING,
+    allowNull: false
+  }
 })
 
 module.exports = ActivitySubmission

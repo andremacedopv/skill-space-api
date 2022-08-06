@@ -124,7 +124,8 @@ exports.finish = async (req, res, next) => {
         if (type == 'Practical'){
             if (body.description) {
                 const submission = await ActivitySubmission.create({
-                    description: body.description
+                    description: body.description,
+                    file: `/${req.file.key}`
                 })
 
                 const feedback = await ActivityFeedback.create()
