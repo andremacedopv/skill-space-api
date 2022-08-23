@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const db = require('./src/services/database')
@@ -11,6 +12,11 @@ const authRouter = require('./src/routes/auth')
 const associateModels = require('./src/middlewares/associations');
 
 const app = express();
+
+app.use(cors({
+    origin: '*'
+}));
+
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
