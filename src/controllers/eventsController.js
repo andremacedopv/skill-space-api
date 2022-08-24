@@ -8,7 +8,11 @@ const InvitedSpeaker = require('../models/invitedSpeaker');
 exports.index = (req, res, next) => {
     Event.findAll({ include: [
         {model: InvitedSpeaker, attributes: ['name']},
-    ] })
+    ],
+    order: [
+        ['date', 'DESC'],
+        ['name', 'ASC'],
+    ]})
     .then(events => {
         res.json({ events: events });
     })
