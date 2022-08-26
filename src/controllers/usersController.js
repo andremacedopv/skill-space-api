@@ -3,6 +3,7 @@ const User = require('../models/user');
 const Address = require('../models/address')
 const Guest = require('../models/guest')
 const Stage = require('../models/stage')
+const TagUser = require('../models/tagUser')
 const { validationResult } = require('express-validator/check')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
@@ -49,6 +50,16 @@ exports.signup = (req, res, next) => {
                     console.log(err)
                     res.status(422).json({error: err})
                 })
+            }
+            return newUser
+        })
+        .then(newUser => {
+            if(user.tags != null) {
+                const tags = [...new Set(user.tags)]
+                var connections = tags.map(id => ({
+                    userId: newUser.id, tagId: id
+                }))
+                TagUser.bulkCreate(connections)
             }
             return newUser
         })
