@@ -127,6 +127,8 @@ const associateModels = (req, res, next) => {
   // NXM Relation between Stage and User
   User.belongsToMany(Stage, {through: StageUser})
   Stage.belongsToMany(User, {through: StageUser})
+  StageUser.belongsTo(User)
+  Stage.hasMany(StageUser)
 
   // NXM Relation between Users (Followers)
   User.belongsToMany(User, {
