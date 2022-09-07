@@ -130,6 +130,25 @@ exports.invites = (req, res, next) => {
     })
 }
 
+exports.myInvites = (req, res, next) => {
+    const userReq = req.user
+    Event.findAll({
+        include: [{
+            model: Guest,
+            as: 'guests',
+            where: {
+                userId: userReq.id
+            },
+        }]
+    })
+    .then(events => {
+        res.json({ events: events });
+    })
+    .catch(e => {
+        res.status(500).json({ error: e.toString() })
+    })  
+}
+
 exports.createFeedback = async (req, res, next) => {
     
     const feedbackParams = req.body;
