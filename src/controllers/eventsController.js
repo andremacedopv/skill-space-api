@@ -139,7 +139,8 @@ exports.myInvites = (req, res, next) => {
             where: {
                 userId: userReq.id
             },
-        }]
+        },
+        {model: InvitedSpeaker, attributes: ['name']}]
     })
     .then(events => {
         res.json({ events: events });
