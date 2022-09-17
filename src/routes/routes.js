@@ -43,10 +43,11 @@ router.put('/event/:event_id/guest/presence', guestsController.confirmPresence)
 router.get('/event/guests/:id', eventsController.invites);
 router.post('/event/invite/:id', eventsController.setInvites);
 router.get('/event', isAuth, eventsController.index);
+router.get('/event/my_invites', isAuth, eventsController.myInvites);
 router.post('/event/create', isAuth, hasPermission("modify_events"), eventsController.create);
 router.put('/event/update/:id', isAuth, hasPermission("modify_events"), eventsController.update);
 router.delete('/event/delete/:id', isAuth, hasPermission("delete_events"), eventsController.delete);
-router.get('/event/:id', eventsController.show);
+router.get('/event/:id', isAuth, eventsController.show);
 router.post('/event/:id/feedback/create', isAuth, eventsController.createFeedback);
 router.get('/event/:id/feedback', eventsController.feedbacks);
 

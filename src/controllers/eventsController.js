@@ -6,12 +6,18 @@ const InvitedSpeaker = require('../models/invitedSpeaker');
 
 // Methods
 exports.index = (req, res, next) => {
-    Event.findAll({ include: EventFeedback })
+    Event.findAll({ include: [
+        {model: InvitedSpeaker, attributes: ['name']},
+        {model: Guest},
+    ],
+    order: [
+        ['date', 'DESC'],
+        ['name', 'ASC'],
+    ]})
     .then(events => {
         res.json({ events: events });
     })
     .catch(e => {
-        console.log(e)
         res.status(500).json({ error: e.toString() })
     })  
 }
@@ -123,6 +129,26 @@ exports.invites = (req, res, next) => {
       console.log(err)
       res.status(422).json({error: err.toString()})
     })
+}
+
+exports.myInvites = (req, res, next) => {
+    const userReq = req.user
+    Event.findAll({
+        include: [{
+            model: Guest,
+            as: 'guests',
+            where: {
+                userId: userReq.id
+            },
+        },
+        {model: InvitedSpeaker, attributes: ['name']}]
+    })
+    .then(events => {
+        res.json({ events: events });
+    })
+    .catch(e => {
+        res.status(500).json({ error: e.toString() })
+    })  
 }
 
 exports.createFeedback = async (req, res, next) => {
