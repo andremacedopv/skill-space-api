@@ -108,6 +108,9 @@ router.delete('/post/delete/:id', postsController.delete);
 
 router.get('/stage', stagesController.index);
 router.get('/stage/my', isAuth, stagesController.myStages);
+router.get('/stage/my/:id', isAuth, stagesController.myStageActivities);
+router.post('/stage/start/:id', isAuth, stagesController.startStage);
+router.post('/stage/finish/:id', isAuth, stagesController.finishStage);
 router.get('/stage/:id', stagesController.show);
 router.post('/stage/create', isAuth, hasPermission("modify_stages"), stagesController.create);
 router.put('/stage/update/:id', isAuth, hasPermission("modify_stages"), stagesController.update);
