@@ -20,6 +20,8 @@ exports.feed = (req, res, next) => {
     Post.findAll({include: [
         {model: Tag, attributes: ['id', 'name']},
         {model: User, attributes: ['id', 'name']},
+    ], order: [
+        ['createdAt', 'DESC'],
     ]})
     .then(posts => {
         res.json({ posts: posts });
