@@ -1,11 +1,26 @@
 // Imports
 const Post = require('../models/post');
 const Tag = require('../models/tag')
+const User = require('../models/user')
 const PostTag = require('../models/postTag')
 
 // Methods
 exports.index = (req, res, next) => {
     Post.findAll({include: Tag})
+    .then(posts => {
+        res.json({ posts: posts });
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(500).json({ error: e.toString() })
+    })  
+}
+
+exports.feed = (req, res, next) => {
+    Post.findAll({include: [
+        {model: Tag, attributes: ['id', 'name']},
+        {model: User, attributes: ['id', 'name']},
+    ]})
     .then(posts => {
         res.json({ posts: posts });
     })
