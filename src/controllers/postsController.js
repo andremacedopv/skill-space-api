@@ -20,9 +20,12 @@ exports.feed = (req, res, next) => {
     Post.findAll({include: [
         {model: Tag, attributes: ['id', 'name']},
         {model: User, attributes: ['id', 'name']},
+        {model: Post, as: 'comments'},
     ], order: [
         ['createdAt', 'DESC'],
-    ]})
+    ], where: {
+        parentPostId: null
+    }})
     .then(posts => {
         res.json({ posts: posts });
     })
@@ -41,6 +44,7 @@ exports.create = async (req, res, next) => {
             userId: req.user.id,
             parentPostId: post.parentPostId
         })
+
         await newPost.setTags(post.tags)
         res.json({ post: newPost.dataValues });
     }
@@ -100,6 +104,7 @@ exports.comments = async (req, res, next) => {
         res.status(422).json({ error: e.toString() })
     }
 }
+
 
 exports.delete = (req, res, next) => {
     Post.findByPk(req.params.id)

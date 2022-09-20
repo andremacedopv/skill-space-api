@@ -253,6 +253,16 @@ const associateModels = (req, res, next) => {
   Permission.belongsToMany(User, { through: AdminPermission });
   User.belongsToMany(Permission, { through: AdminPermission });
 
+  // NX1 Relation between Post and Post (Comments)
+  Post.hasMany(Post, {
+    as: { singular: 'comment', plural: 'comments' },
+    foreignKey: 'parentPostId',
+  })
+
+  Post.hasOne(Post, {
+    foreignKey: 'parentPostId',
+  })
+
   next()
 }
 
