@@ -2,7 +2,7 @@
 const Post = require('../models/post');
 const Tag = require('../models/tag')
 const User = require('../models/user')
-const PostTag = require('../models/postTag')
+const Reaction = require('../models/reaction')
 
 // Methods
 exports.index = (req, res, next) => {
@@ -21,6 +21,7 @@ exports.feed = (req, res, next) => {
         {model: Tag, attributes: ['id', 'name']},
         {model: User, attributes: ['id', 'name']},
         {model: Post, as: 'comments'},
+        {model: Reaction, as: 'reacteds'}
     ], order: [
         ['createdAt', 'DESC'],
     ], where: {
