@@ -18,7 +18,7 @@ const Reaction = db.define('reaction', {
   },
   status: {
     type: sequelize.ENUM,
-    values: ['Like','Dislike','Funny','Sad','Love','Surprise','Angry'],
+    values: ['Like','Dislike', 'Love', 'Sad', 'Funny', 'Angry', 'Fire'],
     allowNull: false,
   },
 })
