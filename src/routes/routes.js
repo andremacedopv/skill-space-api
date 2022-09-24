@@ -82,7 +82,8 @@ router.get('/activity/user', isAuth, activityUsersController.userIndex);
 
 router.get('/activity', activitiesController.index);
 router.get('/activity/:id', activitiesController.show);
-router.post('/activity/create', isAuth, hasPermission("modify_activities"), activitiesController.create);
+router.get('/activity/my/:id', isAuth, activityUsersController.myActivity);
+router.post('/activity/create', isAuth, hasPermission("modify_activities"), multer(multerConfig).single("file"), activitiesController.create);
 router.put('/activity/update/:id', isAuth, hasPermission("modify_activities"), activitiesController.update);
 router.delete('/activity/delete/:id', isAuth, hasPermission("delete_activities"), activitiesController.delete);
 router.post('/activity/requirements/add/:id', isAuth, hasPermission("modify_activities"), activitiesController.addRequirements);

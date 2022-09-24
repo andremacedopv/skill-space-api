@@ -42,6 +42,10 @@ const Activity = db.define('activity', {
     allowNull: false,
     defaultValue: false
   },
+  file: {
+    type: sequelize.STRING,
+    allowNull: false
+  }
 }, {
   scopes: {
     noAssociation: {
