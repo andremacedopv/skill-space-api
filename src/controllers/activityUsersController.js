@@ -9,6 +9,7 @@ const User = require('../models/user')
 const ActivitySubmission = require('../models/activitySubmission')
 const ActivityFeedback = require('../models/activityFeedback')
 const ActivityUser = require('../models/activityUser')
+const Stage = require('../models/stage');
 const { Op } = require("sequelize")
 const constants = require('../lib/constants')
 
@@ -153,7 +154,7 @@ exports.finish = async (req, res, next) => {
             const error = new Error('This method cant finalize Events activities');
             throw error;
         } 
-
+        
         activityUser.dateCompleted = new Date(Date.now()).toISOString();
 
         await activityUser.save()
@@ -375,4 +376,105 @@ exports.pendingFeedbacks = async (req, res, next) => {
     catch(err) {
         res.status(422).json({error: err.toString()})
     }
+}
+
+exports.myActivity = (req, res, next) => {
+    const userId = req.user.id
+    const actId = req.params.id
+    let activity = {}
+    let actUser = {}
+    let actUserArr = []
+    let response = {}
+
+    ActivityUser.findOne({
+        where: {
+            userId: userId,
+            activityId: actId
+        },
+        include: [
+            {model: Activity, include: [
+                { model: Activity, as: 'requirements' },
+                { model: ActivityUser, include: [
+                    {model: ActivitySubmission},
+                    {model: ActivityFeedback},
+                ]},
+                {model: ActivityType},
+                {model: Category},
+                {model: Stage, attributes: ['id', 'name']}
+            ]},
+            {model: ActivitySubmission},
+            {model: ActivityFeedback, include: [
+                {model: User}
+            ]}
+        ] 
+    }).then(actUserRetrieved => {
+        actUser = actUserRetrieved
+        return Activity.findByPk(actId, {
+            include: [
+                { model: Activity, as: 'requirements' },
+                { model: ActivityUser, include: [
+                    {model: ActivitySubmission},
+                    {model: ActivityFeedback},
+                ]},
+                {model: ActivityType},
+                {model: Category},
+                {model: Stage, attributes: ['id', 'name']}
+        ]})
+    }).then(retrivedAct => {
+        activity = retrivedAct
+        let requirementsIds = activity.requirements.map(a => a.id);
+        return ActivityUser.findAll({
+            where: {
+                userId: userId,
+                activityId: requirementsIds
+            }
+        })
+    }).then(requirementsUserArr => {
+        // Get status
+        if(actUser == null) {
+            activity.dataValues.status = 'not-started'
+        } else if(activity.activityTypeId == 2) {
+            if(actUser.activitySubmissionId == null) {
+                activity.dataValues.status = 'started'
+            } else {
+                if(actUser.activityFeedback.userId == null) {
+                    activity.dataValues.status = 'pending-feedback'
+                } else {
+                    activity.dataValues.status = actUser.activityFeedback.approved === false ? 'rejected' : 'approved'
+                }
+            }
+        } else {
+            console.log(activity.dataValues.ActivityTypeId)
+            if(actUser.dateCompleted == null) {
+                activity.dataValues.status = 'started'
+            } else {
+                activity.dataValues.status = 'completed'
+            }
+        }
+
+        // Check if blocked
+        let locked = false
+        if (activity.requirements.length > 0) {
+            if(requirementsUserArr.length != 0) {
+                requirementsUserArr.map(aUser => {
+                    if(aUser.dateCompleted == null) {
+                        locked = true
+                    }
+                })    
+            }
+
+            if(requirementsUserArr.length != activity.requirements.length) {
+                locked = true
+            }
+        }
+        activity.dataValues.locked = locked
+        res.json({ 
+            activity: activity,
+            activityUser: actUser,
+            requirements: requirementsUserArr
+        })
+    }).catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e.toString() })
+    })
 }

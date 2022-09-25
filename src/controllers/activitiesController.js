@@ -30,18 +30,31 @@ exports.index = (req, res, next) => {
 
 exports.create = (req, res, next) => {
     const activity = req.body;
+    let mandatory = false
+    if(typeof(activity.mandatory) === 'string') {
+        mandatory = activity.mandatory === 'true'
+    } else {
+        mandatory = activity.mandatory
+    }
     Activity.create({
         name: activity.name,
         description: activity.description,
-        categoryId: activity.category,
-        activityTypeId: activity.activityType,
-        stageId: activity.stage,
-        eventId: (activity.activityType == constants.EventTypeId)? activity.event : null,
-        mandatory: activity.mandatory,
+        categoryId: Number(activity.category),
+        activityTypeId: Number(activity.activityType),
+        stageId: Number(activity.stage),
+        eventId: (activity.activityType == constants.EventTypeId)? Number(activity.event) : null,
+        mandatory: mandatory,
+        file: req.file && `/${req.file.key}`
     })
     .then(newActivity => {
         if(activity.requirements != null) {
-            const activities = [...new Set(activity.requirements)]
+            let requirementsArray = [];
+            if (typeof(activity.requirements) === 'string') {
+                requirementsArray = JSON.parse("[" + activity.requirements + "]");
+            } else {
+                requirementsArray = activity.requirements
+            }
+            const activities = [...new Set(requirementsArray[0])]
             var requirements = activities.map(id => ({
                 activityId: newActivity.id, requirementId: id
             }))

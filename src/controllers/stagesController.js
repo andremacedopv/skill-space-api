@@ -252,7 +252,7 @@ exports.myStageActivities = (req, res, next) => {
         return StageUser.findAll({
             where: {
                 userId: userId,
-                stageId: { in: requirementsIds }
+                stageId: requirementsIds
             }
         })
     }).then(retrievedStageUser => {

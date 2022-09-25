@@ -3,17 +3,16 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.addColumn('activities', 
-    'stageId', {
-      type: Sequelize.INTEGER,
-      references: { model: 'stages', key: 'id' },
-      onDelete: 'SET NULL',
+    'file', {
+      type: Sequelize.STRING,
+      allowNull: true
     })
   },
 
   async down (queryInterface, Sequelize) {
     await queryInterface.removeColumn(
       'activities',
-      'stageId'
+      'file'
     );
   }
 };
