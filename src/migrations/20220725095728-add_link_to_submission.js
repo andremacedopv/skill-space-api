@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.addColumn('activitySubmissions', 
     'file', {
       type: Sequelize.STRING,
-      allowNull: true
+      allowNull: false
     })
   },
 
