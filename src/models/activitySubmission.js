@@ -10,11 +10,11 @@ const ActivitySubmission = db.define('activitySubmission', {
   },
   description: {
     type: sequelize.TEXT,
-    allowNull: true,
+    allowNull: false,
   },
   file: {
     type: sequelize.STRING,
-    allowNull: true
+    allowNull: false
   }
 })
 
