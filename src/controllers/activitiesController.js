@@ -44,7 +44,7 @@ exports.create = (req, res, next) => {
         stageId: Number(activity.stage),
         eventId: (activity.activityType == constants.EventTypeId)? Number(activity.event) : null,
         mandatory: mandatory,
-        file: `/${req.file.key}`
+        file: req.file && `/${req.file.key}`
     })
     .then(newActivity => {
         if(activity.requirements != null) {

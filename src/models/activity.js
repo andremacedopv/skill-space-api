@@ -44,7 +44,7 @@ const Activity = db.define('activity', {
   },
   file: {
     type: sequelize.STRING,
-    allowNull: false
+    allowNull: true
   }
 }, {
   scopes: {

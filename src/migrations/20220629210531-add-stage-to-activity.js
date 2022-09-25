@@ -3,7 +3,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.addColumn('activities', 
-    'StageId', {
+    'stageId', {
       type: Sequelize.INTEGER,
       references: { model: 'stages', key: 'id' },
       onDelete: 'SET NULL',
