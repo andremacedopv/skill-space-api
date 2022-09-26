@@ -2,6 +2,7 @@
 const Post = require('../models/post');
 const Tag = require('../models/tag')
 const User = require('../models/user')
+const TagUser = require('../models/tagUser')
 const Reaction = require('../models/reaction')
 
 // Methods
@@ -16,24 +17,44 @@ exports.index = (req, res, next) => {
     })  
 }
 
-exports.feed = (req, res, next) => {
-    Post.findAll({include: [
-        {model: Tag, attributes: ['id', 'name']},
-        {model: User, attributes: ['id', 'name']},
-        {model: Post, as: 'comments'},
-        {model: Reaction, as: 'reacteds', include: [User]}
-    ], order: [
-        ['createdAt', 'DESC'],
-    ], where: {
-        parentPostId: null
-    }})
-    .then(posts => {
+exports.feed = async (req, res, next) => {
+    try {
+        const userId = req.user.id
+        const tagsUser = await TagUser.findAll({where: {userId: userId}})
+        const interests = tagsUser.map(tagUser => tagUser.tagId)
+
+        const interestedPosts = await Post.findAll({include: [
+            {model: Tag, attributes: ['id'], where: {id: interests}},
+        ], where: {
+            parentPostId: null,
+        }})
+
+        const myPosts = await Post.findAll({include: [
+            {model: User, attributes: ['id', 'name'], where: {id: userId}},
+        ], where: {
+            parentPostId: null,
+        }})
+
+        const totalPosts = interestedPosts.concat(myPosts)
+        const postIds = totalPosts.map(post => post.id)
+
+        const posts = await Post.findAll({include: [
+            {model: Tag, attributes: ['id', 'name']},
+            {model: User, attributes: ['id', 'name']},
+            {model: Post, as: 'comments'},
+            {model: Reaction, as: 'reacteds', include: [User]}
+        ], order: [
+            ['createdAt', 'DESC'],
+        ], where: {
+            id: postIds,
+        }})
+
         res.json({ posts: posts });
-    })
-    .catch(e => {
+    }
+    catch(e) {
         console.log(e)
         res.status(500).json({ error: e.toString() })
-    })  
+    }
 }
 
 exports.create = async (req, res, next) => {
