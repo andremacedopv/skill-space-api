@@ -101,8 +101,16 @@ exports.show = (req, res, next) => {
     Post.findByPk(req.params.id, {include: [
         {model: Tag, attributes: ['id', 'name']},
         {model: User, attributes: ['id', 'name']},
-        {model: Post, as: 'comments'},
-        {model: Reaction, as: 'reacteds', include: [User]}
+        {model: Reaction, as: 'reacteds', include: [User]},
+        {model: Post, as: 'comments', include: [
+            {model: User, attributes: ['id', 'name']}, 
+            {model: Reaction, as: 'reacteds', include: [User]},
+            {model: Post, as: 'comments', include: [
+                {model: User, attributes: ['id', 'name']}, 
+                {model: Reaction, as: 'reacteds', include: [User]},
+                {model: Post, as: 'comments'}, 
+            ]}, 
+        ]},
     ]})
     .then(post => {
         if(!post) throw new Error("Post não encontrado")
