@@ -98,7 +98,12 @@ exports.update = async (req, res, next) => {
 }
 
 exports.show = (req, res, next) => {
-    Post.findByPk(req.params.id, {include: Tag})
+    Post.findByPk(req.params.id, {include: [
+        {model: Tag, attributes: ['id', 'name']},
+        {model: User, attributes: ['id', 'name']},
+        {model: Post, as: 'comments'},
+        {model: Reaction, as: 'reacteds', include: [User]}
+    ]})
     .then(post => {
         if(!post) throw new Error("Post não encontrado")
         res.json({ post: post })
