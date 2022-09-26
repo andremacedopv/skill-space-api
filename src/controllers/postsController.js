@@ -21,7 +21,7 @@ exports.feed = (req, res, next) => {
         {model: Tag, attributes: ['id', 'name']},
         {model: User, attributes: ['id', 'name']},
         {model: Post, as: 'comments'},
-        {model: Reaction, as: 'reacteds'}
+        {model: Reaction, as: 'reacteds', include: [User]}
     ], order: [
         ['createdAt', 'DESC'],
     ], where: {
