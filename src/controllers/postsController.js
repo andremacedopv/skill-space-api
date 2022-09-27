@@ -179,7 +179,6 @@ exports.comments = async (req, res, next) => {
     }
 }
 
-
 exports.delete = (req, res, next) => {
     Post.findByPk(req.params.id)
     .then(post => {
