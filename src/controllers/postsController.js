@@ -4,6 +4,7 @@ const Tag = require('../models/tag')
 const User = require('../models/user')
 const TagUser = require('../models/tagUser')
 const Reaction = require('../models/reaction')
+const Follower = require('../models/follower');
 
 // Methods
 exports.index = (req, res, next) => {
@@ -20,22 +21,28 @@ exports.index = (req, res, next) => {
 exports.feed = async (req, res, next) => {
     try {
         const userId = req.user.id
+        const followings = await Follower.findAll({where: {followerId: req.user.id}, attributes: ['followingId']})
+        const followingUsers = followings.map(following => following.followingId)
         const tagsUser = await TagUser.findAll({where: {userId: userId}})
         const interests = tagsUser.map(tagUser => tagUser.tagId)
-
-        const interestedPosts = await Post.findAll({include: [
-            {model: Tag, attributes: ['id'], where: {id: interests}},
-        ], where: {
-            parentPostId: null,
-        }})
-
+        
         const myPosts = await Post.findAll({include: [
             {model: User, attributes: ['id', 'name'], where: {id: userId}},
         ], where: {
             parentPostId: null,
         }})
+        const interestedPosts = await Post.findAll({include: [
+            {model: Tag, attributes: ['id'], where: {id: interests}},
+        ], where: {
+            parentPostId: null,
+        }})
+        const followingUsersPosts = await Post.findAll({include: [
+            {model: User, attributes: ['id', 'name'], where: {id: followingUsers}},
+        ], where: {
+            parentPostId: null,
+        }})
 
-        const totalPosts = interestedPosts.concat(myPosts)
+        const totalPosts = interestedPosts.concat(myPosts, followingUsersPosts)
         const postIds = totalPosts.map(post => post.id)
 
         const posts = await Post.findAll({include: [
@@ -88,7 +95,6 @@ exports.userFeed = async (req, res, next) => {
         res.status(500).json({ error: e.toString() })
     }
 }
-
 
 exports.create = async (req, res, next) => {
     try{
