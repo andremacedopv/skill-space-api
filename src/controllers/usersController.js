@@ -154,7 +154,13 @@ exports.profile = (req, res, next) => {
 
 exports.show = (req, res, next) => {
     const userReq = req.user
-    User.findByPk(req.params.id)
+    const userId = req.params.id
+    User.findByPk(userId, {
+        include: [
+            { model: User, as: 'follows', attributes: ['id'] },
+            { model: User, as: 'followings', attributes: ['id'] },   
+        ]
+    })
     .then(user => {
       if(!user) throw new Error("Usuário não encontrado")
       let userLoaded = user.dataValues
