@@ -57,6 +57,39 @@ exports.feed = async (req, res, next) => {
     }
 }
 
+exports.userFeed = async (req, res, next) => {
+    try {
+
+        const userId = req.params.id
+
+        const myPosts = await Post.findAll({include: [
+            {model: User, attributes: ['id', 'name'], where: {id: userId}},
+        ], where: {
+            parentPostId: null,
+        }})
+
+        const postIds = myPosts.map(post => post.id)
+
+        const posts = await Post.findAll({include: [
+            {model: Tag, attributes: ['id', 'name']},
+            {model: User, attributes: ['id', 'name']},
+            {model: Post, as: 'comments'},
+            {model: Reaction, as: 'reacteds', include: [User]}
+        ], order: [
+            ['createdAt', 'DESC'],
+        ], where: {
+            id: postIds,
+        }})
+
+        res.json({ posts: posts });
+    }
+    catch(e) {
+        console.log(e)
+        res.status(500).json({ error: e.toString() })
+    }
+}
+
+
 exports.create = async (req, res, next) => {
     try{
         const post = req.body;
