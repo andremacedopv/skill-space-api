@@ -27,7 +27,7 @@ exports.feed = async (req, res, next) => {
         const interests = tagsUser.map(tagUser => tagUser.tagId)
         
         const myPosts = await Post.findAll({include: [
-            {model: User, attributes: ['id', 'name'], where: {id: userId}},
+            {model: User, attributes: ['id', 'name', 'image'], where: {id: userId}},
         ], where: {
             parentPostId: null,
         }})
@@ -37,7 +37,7 @@ exports.feed = async (req, res, next) => {
             parentPostId: null,
         }})
         const followingUsersPosts = await Post.findAll({include: [
-            {model: User, attributes: ['id', 'name'], where: {id: followingUsers}},
+            {model: User, attributes: ['id', 'name', 'image'], where: {id: followingUsers}},
         ], where: {
             parentPostId: null,
         }})
@@ -47,9 +47,9 @@ exports.feed = async (req, res, next) => {
 
         const posts = await Post.findAll({include: [
             {model: Tag, attributes: ['id', 'name']},
-            {model: User, attributes: ['id', 'name']},
+            {model: User, attributes: ['id', 'name', 'image']},
             {model: Post, as: 'comments'},
-            {model: Reaction, as: 'reacteds', include: [User]}
+            {model: Reaction, as: 'reacteds', include: [{model: User, attributes: ['id', 'name', 'image']}]}
         ], order: [
             ['createdAt', 'DESC'],
         ], where: {
@@ -70,7 +70,7 @@ exports.userFeed = async (req, res, next) => {
         const userId = req.params.id
 
         const myPosts = await Post.findAll({include: [
-            {model: User, attributes: ['id', 'name'], where: {id: userId}},
+            {model: User, attributes: ['id', 'name', 'image'], where: {id: userId}},
         ], where: {
             parentPostId: null,
         }})
@@ -79,7 +79,7 @@ exports.userFeed = async (req, res, next) => {
 
         const posts = await Post.findAll({include: [
             {model: Tag, attributes: ['id', 'name']},
-            {model: User, attributes: ['id', 'name']},
+            {model: User, attributes: ['id', 'name', 'image']},
             {model: Post, as: 'comments'},
             {model: Reaction, as: 'reacteds', include: [User]}
         ], order: [
@@ -139,13 +139,13 @@ exports.update = async (req, res, next) => {
 exports.show = (req, res, next) => {
     Post.findByPk(req.params.id, {include: [
         {model: Tag, attributes: ['id', 'name']},
-        {model: User, attributes: ['id', 'name']},
+        {model: User, attributes: ['id', 'name', 'image']},
         {model: Reaction, as: 'reacteds', include: [User]},
         {model: Post, as: 'comments', include: [
-            {model: User, attributes: ['id', 'name']}, 
+            {model: User, attributes: ['id', 'name', 'image']}, 
             {model: Reaction, as: 'reacteds', include: [User]},
             {model: Post, as: 'comments', include: [
-                {model: User, attributes: ['id', 'name']}, 
+                {model: User, attributes: ['id', 'name', 'image']}, 
                 {model: Reaction, as: 'reacteds', include: [User]},
                 {model: Post, as: 'comments'}, 
             ]}, 

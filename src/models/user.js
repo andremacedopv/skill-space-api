@@ -57,6 +57,10 @@ const User = db.define('user', {
         type: sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    image: {
+        type: sequelize.STRING,
+        allowNull: true
     }
 }, {
     scopes: {

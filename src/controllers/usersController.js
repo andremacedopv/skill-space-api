@@ -290,6 +290,37 @@ exports.activate = (req, res, next) => {
     })
 }
 
+exports.updateProfilePicture = (req, res, next) => {
+    const userId = req.user.id
+    const body = req.body;
+    let remove = false
+    if(typeof(body.remove) === 'string') {
+        remove = body.remove === 'true'
+    } else {
+        remove = body.remove
+    }
+
+    User.findByPk(userId)
+    .then(user => {
+        if(!user) throw new Error("Usuário não encontrado")
+        if(remove) {
+            user.image = null
+        } else {
+            console.log("AQUI")
+            console.log(req.file)
+            user.image = req.file && `/${req.file.key}`
+        }
+        return user.save()
+    })
+    .then(newUser => {
+        res.json({ user: newUser.dataValues });
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }) 
+}
+
 exports.invitations = (req, res, next) => {
     const userReq = req.user
     User.scope('minimal').findByPk(userReq.id, { include: Guest })
