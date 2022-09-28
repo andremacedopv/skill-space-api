@@ -4,12 +4,15 @@ const Address = require('../models/address')
 const Guest = require('../models/guest')
 const Stage = require('../models/stage')
 const TagUser = require('../models/tagUser')
+const Permission = require('../models/permission');
+const StageUser = require('../models/stageUser');
+const ActivityUser = require('../models/activityUser');
 const { validationResult } = require('express-validator/check')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
-const StageUser = require('../models/stageUser');
 const { requirements } = require('./activitiesController');
-const Permission = require('../models/permission');
+
+const Op = require('sequelize').Op;
 
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
@@ -152,28 +155,41 @@ exports.profile = (req, res, next) => {
     })
 }
 
-exports.show = (req, res, next) => {
-    const userReq = req.user
-    User.findByPk(req.params.id)
-    .then(user => {
-      if(!user) throw new Error("Usuário não encontrado")
-      let userLoaded = user.dataValues
-      delete userLoaded.password
-      if(!userReq.admin) {
-          delete userLoaded.ddd
-          delete userLoaded.phone
-          delete userLoaded.email
-          delete userLoaded.cpf
-          delete userLoaded.addressId
-          delete userLoaded.owner
-          delete userLoaded.is_active
-      }
-      res.json({user: userLoaded})
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(422).json({error: err})
-    })
+exports.show = async (req, res, next) => {
+
+    try {
+        const userReq = req.user
+        const userId = req.params.id
+        const user = await User.findByPk(userId, {
+            include: [
+                { model: User, as: 'follows', attributes: ['id'] },
+                { model: User, as: 'followings', attributes: ['id'] },   
+            ]
+        })
+
+        const activitiesCompleted = await ActivityUser.count({where: [{userId: userId}, {dateCompleted: { [Op.ne]: null }}]})
+        
+        if(!user) throw new Error("Usuário não encontrado")
+        let userLoaded = user.dataValues
+        delete userLoaded.password
+        if(!userReq.admin) {
+            delete userLoaded.ddd
+            delete userLoaded.phone
+            delete userLoaded.email
+            delete userLoaded.cpf
+            delete userLoaded.addressId
+            delete userLoaded.owner
+            delete userLoaded.is_active
+        }
+        res.json({user: userLoaded, activitiesCompleted: activitiesCompleted})
+        
+    }
+    catch(err) {
+        console.log(err)
+        res.status(422).json({error: err})
+    }
+
+
 }
 
 exports.index = (req, res, next) => {

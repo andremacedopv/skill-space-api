@@ -18,7 +18,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM,
-        values: ['Like','Dislike','Funny','Sad','Love','Surprise','Angry'],
+        values: ['Like','Dislike', 'Love', 'Sad', 'Funny', 'Angry', 'Fire'],
         allowNull: false,
       },
       createdAt: {

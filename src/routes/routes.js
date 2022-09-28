@@ -102,6 +102,8 @@ router.get('/tag/followed', isAuth, tagsController.followedTags);
 router.get('/tag/:id', tagsController.show);
 
 router.get('/post', postsController.index);
+router.get('/post/feed', isAuth, postsController.feed);
+router.get('/post/feed/user/:id', isAuth, postsController.userFeed);
 router.get('/post/:id', postsController.show);
 router.get('/post/:id/comments', postsController.comments);
 router.post('/post/create', isAuth, postsController.create);
