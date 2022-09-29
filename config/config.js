@@ -18,7 +18,11 @@ module.exports =
     logging: true
   },
   "production": {
-    "use_env_variable": process.env.CLEARDB_DATABASE_URL,
+    // "use_env_variable": process.env.CLEARDB_DATABASE_URL,
+    "username": process.env.DB_USER,
+    "password": process.env.DB_PASSWORD,
+    "database": process.env.DB_DATABASE,
+    "host": process.env.DB_HOST,
     "dialect": "mysql"
   }
 }
