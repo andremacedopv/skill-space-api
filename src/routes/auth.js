@@ -44,9 +44,5 @@ router.patch('/user/demote/:id', isAuth, isOwner, usersController.demote)
 router.patch('/user/activate/:id', isAuth, isAdmin, usersController.activate)
 router.patch('/user/permissions/:id', isAuth, isOwner, usersController.updatePermissions)
 router.patch('/user/deactivate/:id', isAuth, isAdmin, usersController.deactivate)
-router.patch('/user/stages/add', isAuth, hasPermission("modify_users"), usersController.addStage)
-router.patch('/user/stages/remove', isAuth, hasPermission("modify_users"), usersController.removeStage)
-router.patch('/user/stages/start/:id', isAuth, usersController.startStage)
-router.patch('/user/stages/finish/:id', isAuth, usersController.finishStage)
 
 module.exports = router;
