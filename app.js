@@ -40,5 +40,5 @@ app.use((error, req, res, next) => {
 
 db.sync()
 .then(result => {
-    app.listen(process.env.PORT || 3333);
+    app.listen(process.env.PORT);
 })
