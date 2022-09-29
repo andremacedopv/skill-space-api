@@ -2,6 +2,10 @@
   "name": "skill-space-api",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "17.9.0",
+    "npm": "6.14.17"
+  },
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
