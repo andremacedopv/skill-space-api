@@ -18,10 +18,7 @@ module.exports =
     logging: true
   },
   "production": {
-    "username": process.env.DB_USER,
-    "password": process.env.DB_PASSWORD,
-    "database": "skill-space",
-    "host": "127.0.0.1",
+    "use_env_variable": process.env.CLEARDB_DATABASE_URL,
     "dialect": "mysql"
   }
 }

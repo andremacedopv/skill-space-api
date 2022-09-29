@@ -40,5 +40,7 @@ app.use((error, req, res, next) => {
 
 db.sync()
 .then(result => {
-    app.listen(process.env.PORT);
+    app.listen(process.env.PORT || 3000, function(){
+        console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+    });      
 })
