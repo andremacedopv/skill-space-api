@@ -11,6 +11,9 @@ const isAdmin = require('../middlewares/is-admin')
 const isOwner = require('../middlewares/is-owner')
 const hasPermission = require('../middlewares/has-permission')
 
+const multer = require("multer");
+const multerConfig = require("../config/multer");
+
 router.post('/signup', [
    body('email')
     .isEmail()
@@ -32,6 +35,7 @@ router.post('/login', usersController.login);
 
 router.get('/profile', isAuth, usersController.profile)
 router.get('/invitations', isAuth, usersController.invitations)
+router.patch('/profile/update/picture', isAuth,  multer(multerConfig).single("file"), usersController.updateProfilePicture)
 router.put('/profile/update', isAuth, usersController.update)
 router.get('/user', isAuth, isAuth, hasPermission("show_users"), usersController.index)
 router.get('/user/:id', isAuth, usersController.show)
@@ -40,9 +44,5 @@ router.patch('/user/demote/:id', isAuth, isOwner, usersController.demote)
 router.patch('/user/activate/:id', isAuth, isAdmin, usersController.activate)
 router.patch('/user/permissions/:id', isAuth, isOwner, usersController.updatePermissions)
 router.patch('/user/deactivate/:id', isAuth, isAdmin, usersController.deactivate)
-router.patch('/user/stages/add', isAuth, hasPermission("modify_users"), usersController.addStage)
-router.patch('/user/stages/remove', isAuth, hasPermission("modify_users"), usersController.removeStage)
-router.patch('/user/stages/start/:id', isAuth, usersController.startStage)
-router.patch('/user/stages/finish/:id', isAuth, usersController.finishStage)
 
 module.exports = router;

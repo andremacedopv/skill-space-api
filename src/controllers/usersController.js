@@ -290,6 +290,37 @@ exports.activate = (req, res, next) => {
     })
 }
 
+exports.updateProfilePicture = (req, res, next) => {
+    const userId = req.user.id
+    const body = req.body;
+    let remove = false
+    if(typeof(body.remove) === 'string') {
+        remove = body.remove === 'true'
+    } else {
+        remove = body.remove
+    }
+
+    User.findByPk(userId)
+    .then(user => {
+        if(!user) throw new Error("Usuário não encontrado")
+        if(remove) {
+            user.image = null
+        } else {
+            console.log("AQUI")
+            console.log(req.file)
+            user.image = req.file && `/${req.file.key}`
+        }
+        return user.save()
+    })
+    .then(newUser => {
+        res.json({ user: newUser.dataValues });
+    })
+    .catch(e => {
+        console.log(e)
+        res.status(422).json({ error: e })
+    }) 
+}
+
 exports.invitations = (req, res, next) => {
     const userReq = req.user
     User.scope('minimal').findByPk(userReq.id, { include: Guest })
@@ -301,111 +332,4 @@ exports.invitations = (req, res, next) => {
       console.log(err)
       res.status(422).json({error: err})
     })
-}
-
-exports.startStage = async (req, res, next) => {
-    const userId = req.user.id
-    const stageId = req.params.id
-
-    try {
-        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
-        if (stageUser) {
-            const error = new Error('The user already have this stage');
-            throw error;
-        }
-
-        const stage = await Stage.findByPk(stageId, { include: 
-            [
-                {model: Stage, as: 'requirements'},
-            ]}
-        )
-        
-        let error = false
-        for (const requirement of stage.requirements) {
-            const checkStageUser = await StageUser.findOne({where: {userId: userId, stageId: requirement.id}})
-            if(!checkStageUser) error = true
-        }
-
-        if(error) throw new Error('The user does not have the required stages');
-
-        await StageUser.create({stageId: stageId, userId: userId, dateStarted: Date.now()})
-        res.json({message: "Stage added to User"})
-    }
-    catch(err) {
-        res.status(422).json({error: err.toString()})
-    }
-}
-
-exports.finishStage = async (req, res, next) => {
-    const userId = req.user.id
-    const stageId = req.params.id
-
-    try {
-        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
-        if (!stageUser) {
-            const error = new Error('The user does not have this stage');
-            throw error;
-        }
-        
-        stageUser.dateCompleted = Date.now()
-
-        await stageUser.save()
-        
-        res.json({message: "Stage concluded with success"})
-    }
-    catch(err) {
-        res.status(422).json({error: err.toString()})
-    }
-}
-
-exports.addStage = async (req, res, next) => {
-    const userId = req.body.user
-    const stageId = req.body.stage
-
-    try {
-        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
-        if (stageUser) {
-            const error = new Error('The user already have this stage');
-            throw error;
-        }
-
-        const stage = await Stage.findByPk(stageId, { include: 
-            [
-                {model: Stage, as: 'requirements'},
-            ]}
-        )
-        
-        let error = false
-        for (const requirement of stage.requirements) {
-            const checkStageUser = await StageUser.findOne({where: {userId: userId, stageId: requirement.id}})
-            if(!checkStageUser) error = true
-        }
-
-        if(error) throw new Error('The user does not have the required stages');
-
-        await StageUser.create({stageId: stageId, userId: userId, dateStarted: Date.now()})
-        res.json({message: "Stage added to User"})
-    }
-    catch(err) {
-        res.status(422).json({error: err.toString()})
-    }
-}
-
-exports.removeStage = async (req, res, next) => {
-    const userId = req.body.user
-    const stageId = req.body.stage
-
-    try {
-        const stageUser = await StageUser.findOne({where: {userId: userId, stageId: stageId}})
-        if (!stageUser) {
-            const error = new Error('The user does not have this stage');
-            throw error;
-        }
-        await stageUser.destroy()
-        
-        res.json({message: "Stage removed from User"})
-    }
-    catch(err) {
-        res.status(422).json({error: err.toString()})
-    }
 }
