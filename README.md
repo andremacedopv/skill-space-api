@@ -31,6 +31,9 @@ AWS_DEFAULT_REGION=us-east-1
   - `npx run db-seed` to create pre-defined elements on the database
 - run `npm start` to start the project on port 3333
 
+## Deploy
+- SkillSpace API is currently deployed at https://skill-space-api.herokuapp.com/
+
 ## Other Database methods
 - `npx run db-drop` to delete the database
 - `npx run db-reset` to execute the drop, create, migrate and seed commands
