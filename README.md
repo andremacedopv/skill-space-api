@@ -3,7 +3,7 @@
 SkillSpace is a course platform built to create customizable courses and manage a community around it. 
 This repository contains only the API part of SkillSpace. It is necessary to execute [SkillSpace Front](https://github.com/andremacedopv/skill-space-front) simultaneously to run SkillSpace's complete application.
 
-## 🚀 Installation
+## ⚙️ Installation
 - Install npm
 - Install NodeJs
 - Install MySQL
