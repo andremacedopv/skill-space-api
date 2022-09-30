@@ -3,7 +3,7 @@
 SkillSpace is a course platform built to create customizable courses and manage a community around it. 
 This repository contains only the API part of SkillSpace. It is necessary to execute [SkillSpace Front](https://github.com/andremacedopv/skill-space-front) simultaneously to run SkillSpace's complete application.
 
-## 🚀 Installation
+## ⚙️ Installation
 - Install npm
 - Install NodeJs
 - Install MySQL
@@ -30,6 +30,9 @@ AWS_DEFAULT_REGION=us-east-1
   - `npx run db-migrate` to execute the migrations
   - `npx run db-seed` to create pre-defined elements on the database
 - run `npm start` to start the project on port 3333
+
+## Deploy
+- SkillSpace API is currently deployed at https://skill-space-api.herokuapp.com/
 
 ## Other Database methods
 - `npx run db-drop` to delete the database
