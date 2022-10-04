@@ -294,7 +294,7 @@ exports.myStageActivities = (req, res, next) => {
                 overallPercentage += 1/total
                 stage.dataValues.activities[i].dataValues.status = 'completed'
 
-                if (activity.activityType.name = "Practical") {
+                if (activity.activityType.name == "Practical") {
                     if (activity.activityUsers[0]?.activityFeedback?.userId == null) {
                         stage.dataValues.activities[i].dataValues.status = 'pending'
                     }
